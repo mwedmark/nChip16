@@ -1,0 +1,9 @@
+C:\Projects\UlppEmu\MWHexEdit\bin\Itanium\DebugAlpha\MWHexEdit.dll.config
+C:\Projects\UlppEmu\MWHexEdit\bin\Itanium\DebugAlpha\MWHexEdit.dll
+C:\Projects\UlppEmu\MWHexEdit\bin\Itanium\DebugAlpha\MWHexEdit.pdb
+C:\Projects\UlppEmu\MWHexEdit\obj\Itanium\DebugAlpha\ResolveAssemblyReference.cache
+C:\Projects\UlppEmu\MWHexEdit\obj\Itanium\DebugAlpha\MW.HexEdit.HexEdit.resources
+C:\Projects\UlppEmu\MWHexEdit\obj\Itanium\DebugAlpha\GenerateResource.read.1.tlog
+C:\Projects\UlppEmu\MWHexEdit\obj\Itanium\DebugAlpha\GenerateResource.write.1.tlog
+C:\Projects\UlppEmu\MWHexEdit\obj\Itanium\DebugAlpha\MWHexEdit.dll
+C:\Projects\UlppEmu\MWHexEdit\obj\Itanium\DebugAlpha\MWHexEdit.pdb

@@ -1,0 +1,9 @@
+C:\Projects\UlppEmu\MWHexEdit\bin\DebugSier\MWHexEdit.dll.config
+C:\Projects\UlppEmu\MWHexEdit\bin\DebugSier\MWHexEdit.dll
+C:\Projects\UlppEmu\MWHexEdit\bin\DebugSier\MWHexEdit.pdb
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugSier\ResolveAssemblyReference.cache
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugSier\MW.HexEdit.HexEdit.resources
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugSier\GenerateResource.read.1.tlog
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugSier\GenerateResource.write.1.tlog
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugSier\MWHexEdit.dll
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugSier\MWHexEdit.pdb

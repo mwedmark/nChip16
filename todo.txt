@@ -1,0 +1,47 @@
+TODO list, combination of bugs and features that may appear:
+
+1.5) Still Alien problems after first shot..
+3) Fix Background bug, even a late change changes ALL colors previously drawn with that color
+6) Make sure that selecting a PC in between real code does not select several lines in assembler listing. f.e. 1,2,3 instead of 0,4
+7) Fix bug that does not update Mem window when scrolling and changes been made earlier off-screen, but updates it when doing step after move.
+10) Add a Checkbox to make Mem window follow changes while stepping
+11) Fix logic in Reset/Run/Step/StepInto (f.e. First Run then Step)
+12) Use Panel so that it is possible to rescale/remove Mem window and make Source bigger
+17) Possible to make a simple addition of scalable Chip16 graphics? if panels are added to all, and both Registers and Source are statically in Y-size, then make Graphics scale. Also add a way of getting back to 1/1 pixel mapping. Menu alternatives: 1X, 2X, 4X, Auto		
+18) Add Joystick handling and also menu alternatives to Select Joystick if available
+19) Fix so that 0x0000 address is NOT chosen in Memory window on start.
+20) Double-click in address row in memory shall bring up a dialog/textbox in where you chose new start address.
+21) Possible to fix so that Return in Memory window moves to next cell not the one below
+22) Selecting cells and pressing Delete in memory window shall fill all with 0x00
+23) Doing CTRL-C CTRL-V in memory window shall copy cells to new location.
+25) Memory Dump, dumps current memory content to a binary file 64K. dump.bin
+27) Better handling of Exceptions, show error and Pause machine or just stop program?
+28) Right-clicking cells in Mem window shall Drop-Down meny to make it possible to AddWatch.
+33) Adding Watches by using Drag'n'Drop between Mem/Sources and Watches window.
+37) When labels is present on current line, make it posible to "Follow Label" or "Follow address". This is used the recompiling and using the same Watches. If chosen "Follow Label", the watch shall move to new location.
+38) Run form a line with a BP does not move (stuck on BP inital round)
+39) Known bug that it is not possible to update registers by hand while the setting Real-time update is on and state of Chip-16 is Running.
+
+1) * Fix bugs with background that make Alien crash, Boing get woring color on grid and make Pacman get stuck (maybe same as 3)
+1.2) * Bugs with Breakpoints, More than one line goes Orange, Breakpoints don't turn and stay red.
+2) * Implement SpriteFlip, bug with some directions o FLIP (flip_test is not seen 100% of time)
+4) * Breakpoints, bug with using fist in Frame and also handling of several breakpoints
+5) * Update assembler listing automatically when PC changes in pause mode.
+8) * Lock down all input fields with at least length but even better 0-F
+9) * Why does Drag/Drop takes alot of time? Source window slow? Fix! => Minimize Listing!
+13) * Move real-time update checkbox to Registers itself
+14) * Make it possible to double-click border and get maximazing. Add Controls to window
+16) * Remake the assembler listing with correct assembler. Add Menu alternative to add/remove extra Assembler info as today.
+17) * Make program handle the mmap.txt file and show labels, this also greys out all addresses in assembler listing.
+17.5) * Still left with Labels is the addresses IN the machine code.
+18) * Make assembler listing adhere to the end of the program and not list the whole memory. Speed problem gone?
+19) * Also make it possible for user to select new end address of code menu alternative: View: Source/Select code end
+24) * List current ROM structure
+29) * When adding watches both addresses and labels (if using mmap.txt) should be listed. 
+30) * Possible to show either BYTE/WORD watch when adding watch.
+31) * Possible to show: BIN/DEC/HEX for each watch.
+32) * Even if Labels not used, it is possible to give each Watch a name.
+34) * Add full-screen mode and simple jumping in-between
+35) * Use EndOfProgram tag to automatically limit the number of lines in sources window
+36) * When reloading program with LoadProgramAndReset, reposition Watches using LockTo:Label
+39) * Fix so that scrolling is less aggresive when Stepping/Stopping. Visible is enough, it shall not scroll every single line all the time.

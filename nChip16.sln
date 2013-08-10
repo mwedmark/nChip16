@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nChip16", "nChip16\nChip16.csproj", "{868A2460-21D6-479F-BDFC-FB45103B0025}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MWHexEdit", "MWHexEdit\MWHexEdit.csproj", "{4CBA78E7-F331-4D03-B277-845F0865CA6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Itanium = Debug|Itanium
+		DebugAlpha|Any CPU = DebugAlpha|Any CPU
+		DebugAlpha|Itanium = DebugAlpha|Itanium
+		DebugButta|Any CPU = DebugButta|Any CPU
+		DebugButta|Itanium = DebugButta|Itanium
+		DebugRecursive|Any CPU = DebugRecursive|Any CPU
+		DebugRecursive|Itanium = DebugRecursive|Itanium
+		DebugSier|Any CPU = DebugSier|Any CPU
+		DebugSier|Itanium = DebugSier|Itanium
+		DebugSlideshow|Any CPU = DebugSlideshow|Any CPU
+		DebugSlideshow|Itanium = DebugSlideshow|Itanium
+		DebugWithoutPars|Any CPU = DebugWithoutPars|Any CPU
+		DebugWithoutPars|Itanium = DebugWithoutPars|Itanium
+		Release|Any CPU = Release|Any CPU
+		Release|Itanium = Release|Itanium
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.Debug|Itanium.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugAlpha|Any CPU.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugAlpha|Any CPU.Build.0 = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugAlpha|Itanium.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugButta|Any CPU.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugButta|Any CPU.Build.0 = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugButta|Itanium.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugRecursive|Any CPU.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugRecursive|Any CPU.Build.0 = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugRecursive|Itanium.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugSier|Any CPU.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugSier|Any CPU.Build.0 = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugSier|Itanium.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugSlideshow|Any CPU.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugSlideshow|Any CPU.Build.0 = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugSlideshow|Itanium.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugWithoutPars|Any CPU.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugWithoutPars|Any CPU.Build.0 = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.DebugWithoutPars|Itanium.ActiveCfg = Debug|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.Release|Any CPU.Build.0 = Release|Any CPU
+		{868A2460-21D6-479F-BDFC-FB45103B0025}.Release|Itanium.ActiveCfg = Release|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.Debug|Itanium.ActiveCfg = Debug|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.Debug|Itanium.Build.0 = Debug|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugAlpha|Any CPU.ActiveCfg = DebugAlpha|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugAlpha|Any CPU.Build.0 = DebugAlpha|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugAlpha|Itanium.ActiveCfg = DebugAlpha|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugAlpha|Itanium.Build.0 = DebugAlpha|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugButta|Any CPU.ActiveCfg = DebugButta|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugButta|Any CPU.Build.0 = DebugButta|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugButta|Itanium.ActiveCfg = DebugButta|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugButta|Itanium.Build.0 = DebugButta|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugRecursive|Any CPU.ActiveCfg = DebugRecursive|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugRecursive|Any CPU.Build.0 = DebugRecursive|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugRecursive|Itanium.ActiveCfg = DebugRecursive|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugRecursive|Itanium.Build.0 = DebugRecursive|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugSier|Any CPU.ActiveCfg = DebugSier|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugSier|Any CPU.Build.0 = DebugSier|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugSier|Itanium.ActiveCfg = DebugSier|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugSier|Itanium.Build.0 = DebugSier|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugSlideshow|Any CPU.ActiveCfg = DebugSlideshow|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugSlideshow|Any CPU.Build.0 = DebugSlideshow|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugSlideshow|Itanium.ActiveCfg = DebugSlideshow|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugSlideshow|Itanium.Build.0 = DebugSlideshow|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugWithoutPars|Any CPU.ActiveCfg = DebugWithoutPars|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugWithoutPars|Any CPU.Build.0 = DebugWithoutPars|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugWithoutPars|Itanium.ActiveCfg = DebugWithoutPars|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.DebugWithoutPars|Itanium.Build.0 = DebugWithoutPars|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.Release|Itanium.ActiveCfg = Release|Itanium
+		{4CBA78E7-F331-4D03-B277-845F0865CA6B}.Release|Itanium.Build.0 = Release|Itanium
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,812 @@
+﻿using System.Windows.Forms;
+
+namespace nChip16
+{
+    partial class MainForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.emuTimer = new System.Windows.Forms.Timer(this.components);
+            this.gbRegisters = new System.Windows.Forms.GroupBox();
+            this.cbRealtimeRegisterUpdate = new System.Windows.Forms.CheckBox();
+            this.lblI = new System.Windows.Forms.Label();
+            this.lblPC = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.gbSource = new System.Windows.Forms.GroupBox();
+            this.tbSource = new System.Windows.Forms.RichTextBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.hexEdit1 = new MW.HexEdit.HexEdit();
+            this.gbControls = new System.Windows.Forms.GroupBox();
+            this.pbEmuScreen = new System.Windows.Forms.PictureBox();
+            this.cmsSetLastSource = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmsiSetLastSource = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslRomName = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tssLabelRomSize = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslRomSize = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel7 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslInitialPC = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel5 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslSpecVersion = new System.Windows.Forms.ToolStripStatusLabel();
+            this.gbWatches = new System.Windows.Forms.GroupBox();
+            this.cbRealtimeWatches = new System.Windows.Forms.CheckBox();
+            this.lvWatches = new System.Windows.Forms.ListView();
+            this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cmsWatchesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addWatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editWatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteWatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mainMenu = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dumpMemoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tmsiWaitForVBLANK = new System.Windows.Forms.ToolStripMenuItem();
+            this.tssLabelChip16Usage = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslChip16Usage = new System.Windows.Forms.ToolStripStatusLabel();
+            this.slowTimer = new System.Windows.Forms.Timer(this.components);
+            this.btnStep = new nChip16.KeyHandleButton();
+            this.btnStepInto = new nChip16.KeyHandleButton();
+            this.btnRun = new nChip16.KeyHandleButton();
+            this.btnReset = new nChip16.KeyHandleButton();
+            this.tbSP = new nChip16.KeyHandleTextBox();
+            this.tbPC = new nChip16.KeyHandleTextBox();
+            this.tbFlagN = new nChip16.KeyHandleTextBox();
+            this.tbFlagO = new nChip16.KeyHandleTextBox();
+            this.tbFlagZ = new nChip16.KeyHandleTextBox();
+            this.tbFlagC = new nChip16.KeyHandleTextBox();
+            this.gbRegisters.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.gbSource.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.gbControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbEmuScreen)).BeginInit();
+            this.cmsSetLastSource.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
+            this.gbWatches.SuspendLayout();
+            this.cmsWatchesMenu.SuspendLayout();
+            this.mainMenu.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // emuTimer
+            // 
+            this.emuTimer.Interval = 15;
+            this.emuTimer.Tick += new System.EventHandler(this.emuTimer_Tick);
+            // 
+            // gbRegisters
+            // 
+            this.gbRegisters.Controls.Add(this.cbRealtimeRegisterUpdate);
+            this.gbRegisters.Controls.Add(this.tbSP);
+            this.gbRegisters.Controls.Add(this.lblI);
+            this.gbRegisters.Controls.Add(this.tbPC);
+            this.gbRegisters.Controls.Add(this.lblPC);
+            this.gbRegisters.Controls.Add(this.groupBox1);
+            this.gbRegisters.Font = new System.Drawing.Font("Lucida Console", 8.3F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbRegisters.Location = new System.Drawing.Point(12, 28);
+            this.gbRegisters.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.gbRegisters.Name = "gbRegisters";
+            this.gbRegisters.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.gbRegisters.Size = new System.Drawing.Size(148, 332);
+            this.gbRegisters.TabIndex = 10;
+            this.gbRegisters.TabStop = false;
+            this.gbRegisters.Text = "Registers";
+            // 
+            // cbRealtimeRegisterUpdate
+            // 
+            this.cbRealtimeRegisterUpdate.AutoSize = true;
+            this.cbRealtimeRegisterUpdate.Location = new System.Drawing.Point(12, 17);
+            this.cbRealtimeRegisterUpdate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbRealtimeRegisterUpdate.Name = "cbRealtimeRegisterUpdate";
+            this.cbRealtimeRegisterUpdate.Size = new System.Drawing.Size(129, 16);
+            this.cbRealtimeRegisterUpdate.TabIndex = 20;
+            this.cbRealtimeRegisterUpdate.Text = "Realtime Update";
+            this.cbRealtimeRegisterUpdate.UseVisualStyleBackColor = true;
+            // 
+            // lblI
+            // 
+            this.lblI.AutoSize = true;
+            this.lblI.Font = new System.Drawing.Font("Lucida Console", 8.3F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblI.Location = new System.Drawing.Point(74, 41);
+            this.lblI.Name = "lblI";
+            this.lblI.Size = new System.Drawing.Size(19, 12);
+            this.lblI.TabIndex = 13;
+            this.lblI.Text = "SP";
+            this.lblI.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblPC
+            // 
+            this.lblPC.AutoSize = true;
+            this.lblPC.Font = new System.Drawing.Font("Lucida Console", 8.3F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPC.Location = new System.Drawing.Point(4, 41);
+            this.lblPC.Name = "lblPC";
+            this.lblPC.Size = new System.Drawing.Size(19, 12);
+            this.lblPC.TabIndex = 11;
+            this.lblPC.Text = "PC";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.tbFlagN);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.tbFlagO);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.tbFlagZ);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.tbFlagC);
+            this.groupBox1.Font = new System.Drawing.Font("Lucida Console", 8.3F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(7, 269);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox1.Size = new System.Drawing.Size(134, 52);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Flags";
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(115, 9);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(12, 12);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "N";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(95, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(12, 12);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "O";
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(75, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(12, 12);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Z";
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(55, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(12, 12);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "C";
+            // 
+            // gbSource
+            // 
+            this.gbSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbSource.Controls.Add(this.tbSource);
+            this.gbSource.Font = new System.Drawing.Font("Lucida Console", 8.3F);
+            this.gbSource.Location = new System.Drawing.Point(763, 28);
+            this.gbSource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.gbSource.Name = "gbSource";
+            this.gbSource.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.gbSource.Size = new System.Drawing.Size(425, 523);
+            this.gbSource.TabIndex = 11;
+            this.gbSource.TabStop = false;
+            this.gbSource.Text = "Source";
+            // 
+            // tbSource
+            // 
+            this.tbSource.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbSource.Font = new System.Drawing.Font("Lucida Console", 9.3F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSource.Location = new System.Drawing.Point(3, 16);
+            this.tbSource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tbSource.Name = "tbSource";
+            this.tbSource.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.tbSource.Size = new System.Drawing.Size(419, 503);
+            this.tbSource.TabIndex = 1;
+            this.tbSource.TabStop = false;
+            this.tbSource.Text = "";
+            this.tbSource.WordWrap = false;
+            this.tbSource.DoubleClick += new System.EventHandler(this.tbSource_DoubleClick);
+            this.tbSource.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tbSource_MouseDown);
+            this.tbSource.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tbSource_MouseMove);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.hexEdit1);
+            this.groupBox3.Font = new System.Drawing.Font("Lucida Console", 8.3F);
+            this.groupBox3.Location = new System.Drawing.Point(12, 363);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox3.Size = new System.Drawing.Size(739, 186);
+            this.groupBox3.TabIndex = 17;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Memory";
+            // 
+            // hexEdit1
+            // 
+            this.hexEdit1.BitCount = MW.HexEdit.eBitCount.eight;
+            this.hexEdit1.CharIndex = 0;
+            this.hexEdit1.ColumnsPerRow = 16;
+            this.hexEdit1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hexEdit1.EndAddress = ((uint)(0u));
+            this.hexEdit1.Endianess = MW.HexEdit.eEndianess.Little;
+            this.hexEdit1.Location = new System.Drawing.Point(3, 16);
+            this.hexEdit1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.hexEdit1.Name = "hexEdit1";
+            this.hexEdit1.Radix = MW.HexEdit.eRadix.Hexadecimal;
+            this.hexEdit1.ShowCharacterColumn = true;
+            this.hexEdit1.Size = new System.Drawing.Size(733, 166);
+            this.hexEdit1.StartAddress = ((uint)(0u));
+            this.hexEdit1.TabIndex = 17;
+            this.hexEdit1.OnDataChanged += new MW.HexEdit.dOnDataChanged(this.hexEdit1_OnDataChanged);
+            // 
+            // gbControls
+            // 
+            this.gbControls.Controls.Add(this.btnStep);
+            this.gbControls.Controls.Add(this.btnStepInto);
+            this.gbControls.Controls.Add(this.btnRun);
+            this.gbControls.Controls.Add(this.btnReset);
+            this.gbControls.Font = new System.Drawing.Font("Lucida Console", 8.3F);
+            this.gbControls.Location = new System.Drawing.Point(170, 290);
+            this.gbControls.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.gbControls.Name = "gbControls";
+            this.gbControls.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.gbControls.Size = new System.Drawing.Size(320, 71);
+            this.gbControls.TabIndex = 19;
+            this.gbControls.TabStop = false;
+            this.gbControls.Text = "Controls";
+            // 
+            // pbEmuScreen
+            // 
+            this.pbEmuScreen.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.pbEmuScreen.Location = new System.Drawing.Point(167, 35);
+            this.pbEmuScreen.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pbEmuScreen.Name = "pbEmuScreen";
+            this.pbEmuScreen.Size = new System.Drawing.Size(320, 240);
+            this.pbEmuScreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbEmuScreen.TabIndex = 18;
+            this.pbEmuScreen.TabStop = false;
+            this.pbEmuScreen.Click += new System.EventHandler(this.pbEmuScreen_Click);
+            // 
+            // cmsSetLastSource
+            // 
+            this.cmsSetLastSource.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmsiSetLastSource});
+            this.cmsSetLastSource.Name = "contextMenuStrip1";
+            this.cmsSetLastSource.Size = new System.Drawing.Size(164, 26);
+            // 
+            // cmsiSetLastSource
+            // 
+            this.cmsiSetLastSource.Name = "cmsiSetLastSource";
+            this.cmsiSetLastSource.Size = new System.Drawing.Size(163, 22);
+            this.cmsiSetLastSource.Text = "Set as last source";
+            this.cmsiSetLastSource.Click += new System.EventHandler(this.cmsiSetLastSource_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.tsslRomName,
+            this.tssLabelRomSize,
+            this.tsslRomSize,
+            this.toolStripStatusLabel7,
+            this.tsslInitialPC,
+            this.toolStripStatusLabel5,
+            this.tsslSpecVersion,
+            this.tssLabelChip16Usage,
+            this.tsslChip16Usage});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 555);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1188, 22);
+            this.statusStrip1.TabIndex = 20;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(43, 17);
+            this.toolStripStatusLabel1.Text = "Name:";
+            this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
+            // 
+            // tsslRomName
+            // 
+            this.tsslRomName.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.tsslRomName.Name = "tsslRomName";
+            this.tsslRomName.Size = new System.Drawing.Size(32, 17);
+            this.tsslRomName.Text = "-----";
+            // 
+            // tssLabelRomSize
+            // 
+            this.tssLabelRomSize.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.tssLabelRomSize.Name = "tssLabelRomSize";
+            this.tssLabelRomSize.Size = new System.Drawing.Size(33, 17);
+            this.tssLabelRomSize.Text = "Size:";
+            // 
+            // tsslRomSize
+            // 
+            this.tsslRomSize.Name = "tsslRomSize";
+            this.tsslRomSize.Size = new System.Drawing.Size(22, 17);
+            this.tsslRomSize.Text = "---";
+            // 
+            // toolStripStatusLabel7
+            // 
+            this.toolStripStatusLabel7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.toolStripStatusLabel7.Name = "toolStripStatusLabel7";
+            this.toolStripStatusLabel7.Size = new System.Drawing.Size(58, 17);
+            this.toolStripStatusLabel7.Text = "Initial PC:";
+            // 
+            // tsslInitialPC
+            // 
+            this.tsslInitialPC.Name = "tsslInitialPC";
+            this.tsslInitialPC.Size = new System.Drawing.Size(42, 17);
+            this.tsslInitialPC.Text = "0x0000";
+            // 
+            // toolStripStatusLabel5
+            // 
+            this.toolStripStatusLabel5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.toolStripStatusLabel5.Name = "toolStripStatusLabel5";
+            this.toolStripStatusLabel5.Size = new System.Drawing.Size(82, 17);
+            this.toolStripStatusLabel5.Text = "Spec Version:";
+            // 
+            // tsslSpecVersion
+            // 
+            this.tsslSpecVersion.Name = "tsslSpecVersion";
+            this.tsslSpecVersion.Size = new System.Drawing.Size(20, 17);
+            this.tsslSpecVersion.Text = "-.-";
+            // 
+            // gbWatches
+            // 
+            this.gbWatches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbWatches.Controls.Add(this.cbRealtimeWatches);
+            this.gbWatches.Controls.Add(this.lvWatches);
+            this.gbWatches.Font = new System.Drawing.Font("Lucida Console", 8.3F);
+            this.gbWatches.Location = new System.Drawing.Point(496, 28);
+            this.gbWatches.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.gbWatches.Name = "gbWatches";
+            this.gbWatches.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.gbWatches.Size = new System.Drawing.Size(258, 331);
+            this.gbWatches.TabIndex = 21;
+            this.gbWatches.TabStop = false;
+            this.gbWatches.Text = "Watches";
+            // 
+            // cbRealtimeWatches
+            // 
+            this.cbRealtimeWatches.Location = new System.Drawing.Point(25, 16);
+            this.cbRealtimeWatches.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbRealtimeWatches.Name = "cbRealtimeWatches";
+            this.cbRealtimeWatches.Size = new System.Drawing.Size(160, 14);
+            this.cbRealtimeWatches.TabIndex = 21;
+            this.cbRealtimeWatches.Text = "Realtime Update";
+            this.cbRealtimeWatches.UseVisualStyleBackColor = true;
+            // 
+            // lvWatches
+            // 
+            this.lvWatches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvWatches.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chName,
+            this.chAddress,
+            this.chValue});
+            this.lvWatches.ContextMenuStrip = this.cmsWatchesMenu;
+            this.lvWatches.FullRowSelect = true;
+            this.lvWatches.GridLines = true;
+            this.lvWatches.Location = new System.Drawing.Point(3, 33);
+            this.lvWatches.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.lvWatches.Name = "lvWatches";
+            this.lvWatches.Size = new System.Drawing.Size(252, 295);
+            this.lvWatches.TabIndex = 0;
+            this.lvWatches.UseCompatibleStateImageBehavior = false;
+            this.lvWatches.View = System.Windows.Forms.View.Details;
+            this.lvWatches.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvWatches_KeyDown);
+            this.lvWatches.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvWatches_MouseDown);
+            // 
+            // chName
+            // 
+            this.chName.Text = "Name";
+            this.chName.Width = 113;
+            // 
+            // chAddress
+            // 
+            this.chAddress.Text = "Address";
+            this.chAddress.Width = 72;
+            // 
+            // chValue
+            // 
+            this.chValue.Text = "Value";
+            // 
+            // cmsWatchesMenu
+            // 
+            this.cmsWatchesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addWatchToolStripMenuItem,
+            this.editWatchToolStripMenuItem,
+            this.deleteWatchToolStripMenuItem});
+            this.cmsWatchesMenu.Name = "cmsWatchesMenu";
+            this.cmsWatchesMenu.Size = new System.Drawing.Size(145, 70);
+            // 
+            // addWatchToolStripMenuItem
+            // 
+            this.addWatchToolStripMenuItem.Name = "addWatchToolStripMenuItem";
+            this.addWatchToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.addWatchToolStripMenuItem.Text = "Add Watch";
+            this.addWatchToolStripMenuItem.Click += new System.EventHandler(this.addWatchToolStripMenuItem_Click);
+            // 
+            // editWatchToolStripMenuItem
+            // 
+            this.editWatchToolStripMenuItem.Name = "editWatchToolStripMenuItem";
+            this.editWatchToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.editWatchToolStripMenuItem.Text = "Edit Watch";
+            this.editWatchToolStripMenuItem.Click += new System.EventHandler(this.editWatchToolStripMenuItem_Click);
+            // 
+            // deleteWatchToolStripMenuItem
+            // 
+            this.deleteWatchToolStripMenuItem.Name = "deleteWatchToolStripMenuItem";
+            this.deleteWatchToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.deleteWatchToolStripMenuItem.Text = "Delete Watch";
+            this.deleteWatchToolStripMenuItem.Click += new System.EventHandler(this.deleteWatchToolStripMenuItem_Click);
+            // 
+            // mainMenu
+            // 
+            this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.settingsToolStripMenuItem});
+            this.mainMenu.Location = new System.Drawing.Point(0, 0);
+            this.mainMenu.Name = "mainMenu";
+            this.mainMenu.Size = new System.Drawing.Size(1188, 24);
+            this.mainMenu.TabIndex = 22;
+            this.mainMenu.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.dumpMemoryToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Font = new System.Drawing.Font("Lucida Console", 8.3F);
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // dumpMemoryToolStripMenuItem
+            // 
+            this.dumpMemoryToolStripMenuItem.Enabled = false;
+            this.dumpMemoryToolStripMenuItem.Name = "dumpMemoryToolStripMenuItem";
+            this.dumpMemoryToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.dumpMemoryToolStripMenuItem.Text = "Dump memory";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tmsiWaitForVBLANK});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // tmsiWaitForVBLANK
+            // 
+            this.tmsiWaitForVBLANK.Checked = true;
+            this.tmsiWaitForVBLANK.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tmsiWaitForVBLANK.Name = "tmsiWaitForVBLANK";
+            this.tmsiWaitForVBLANK.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.tmsiWaitForVBLANK.Size = new System.Drawing.Size(182, 22);
+            this.tmsiWaitForVBLANK.Text = "Wait for VBLANK";
+            this.tmsiWaitForVBLANK.Click += new System.EventHandler(this.tmsiWaitForVBLANK_Click);
+            // 
+            // tssLabelChip16Usage
+            // 
+            this.tssLabelChip16Usage.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.tssLabelChip16Usage.Name = "tssLabelChip16Usage";
+            this.tssLabelChip16Usage.Size = new System.Drawing.Size(83, 17);
+            this.tssLabelChip16Usage.Text = "Chip16 usage:";
+            // 
+            // tsslChip16Usage
+            // 
+            this.tsslChip16Usage.Name = "tsslChip16Usage";
+            this.tsslChip16Usage.Size = new System.Drawing.Size(22, 17);
+            this.tsslChip16Usage.Text = "-%";
+            // 
+            // slowTimer
+            // 
+            this.slowTimer.Enabled = true;
+            this.slowTimer.Interval = 1000;
+            this.slowTimer.Tick += new System.EventHandler(this.slowTimer_Tick);
+            // 
+            // btnStep
+            // 
+            this.btnStep.Location = new System.Drawing.Point(162, 17);
+            this.btnStep.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnStep.Name = "btnStep";
+            this.btnStep.Size = new System.Drawing.Size(75, 34);
+            this.btnStep.TabIndex = 18;
+            this.btnStep.TabStop = false;
+            this.btnStep.Text = "Step (F10)";
+            this.btnStep.UseVisualStyleBackColor = true;
+            this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
+            // 
+            // btnStepInto
+            // 
+            this.btnStepInto.Location = new System.Drawing.Point(243, 17);
+            this.btnStepInto.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnStepInto.Name = "btnStepInto";
+            this.btnStepInto.Size = new System.Drawing.Size(75, 34);
+            this.btnStepInto.TabIndex = 17;
+            this.btnStepInto.TabStop = false;
+            this.btnStepInto.Text = "StepInto (F11)";
+            this.btnStepInto.UseVisualStyleBackColor = true;
+            this.btnStepInto.Click += new System.EventHandler(this.btnStepInto_Click);
+            // 
+            // btnRun
+            // 
+            this.btnRun.Location = new System.Drawing.Point(81, 17);
+            this.btnRun.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnRun.Name = "btnRun";
+            this.btnRun.Size = new System.Drawing.Size(75, 34);
+            this.btnRun.TabIndex = 16;
+            this.btnRun.TabStop = false;
+            this.btnRun.Text = "Run  (F5)";
+            this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            // 
+            // btnReset
+            // 
+            this.btnReset.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.btnReset.Location = new System.Drawing.Point(0, 17);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(75, 34);
+            this.btnReset.TabIndex = 15;
+            this.btnReset.TabStop = false;
+            this.btnReset.Text = "Reset (F1)";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
+            // tbSP
+            // 
+            this.tbSP.Font = new System.Drawing.Font("Lucida Console", 8.3F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSP.Location = new System.Drawing.Point(98, 38);
+            this.tbSP.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tbSP.MaxLength = 4;
+            this.tbSP.Name = "tbSP";
+            this.tbSP.Size = new System.Drawing.Size(43, 19);
+            this.tbSP.TabIndex = 14;
+            this.tbSP.TabStop = false;
+            this.tbSP.Text = "FFFF";
+            this.tbSP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbSP.Enter += new System.EventHandler(this.tbSP_Enter);
+            this.tbSP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_KeyDown);
+            this.tbSP.Leave += new System.EventHandler(this.textBox_TextChanged);
+            // 
+            // tbPC
+            // 
+            this.tbPC.Font = new System.Drawing.Font("Lucida Console", 8.3F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPC.Location = new System.Drawing.Point(26, 38);
+            this.tbPC.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tbPC.MaxLength = 4;
+            this.tbPC.Name = "tbPC";
+            this.tbPC.Size = new System.Drawing.Size(43, 19);
+            this.tbPC.TabIndex = 12;
+            this.tbPC.TabStop = false;
+            this.tbPC.Text = "FFFF";
+            this.tbPC.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPC.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            this.tbPC.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_KeyDown);
+            // 
+            // tbFlagN
+            // 
+            this.tbFlagN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbFlagN.Location = new System.Drawing.Point(113, 26);
+            this.tbFlagN.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tbFlagN.MaxLength = 1;
+            this.tbFlagN.Name = "tbFlagN";
+            this.tbFlagN.Size = new System.Drawing.Size(16, 19);
+            this.tbFlagN.TabIndex = 14;
+            this.tbFlagN.TabStop = false;
+            this.tbFlagN.Text = "0";
+            this.tbFlagN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // tbFlagO
+            // 
+            this.tbFlagO.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbFlagO.Location = new System.Drawing.Point(93, 26);
+            this.tbFlagO.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tbFlagO.MaxLength = 1;
+            this.tbFlagO.Name = "tbFlagO";
+            this.tbFlagO.Size = new System.Drawing.Size(16, 19);
+            this.tbFlagO.TabIndex = 12;
+            this.tbFlagO.TabStop = false;
+            this.tbFlagO.Text = "0";
+            this.tbFlagO.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // tbFlagZ
+            // 
+            this.tbFlagZ.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbFlagZ.Location = new System.Drawing.Point(73, 26);
+            this.tbFlagZ.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tbFlagZ.MaxLength = 1;
+            this.tbFlagZ.Name = "tbFlagZ";
+            this.tbFlagZ.Size = new System.Drawing.Size(16, 19);
+            this.tbFlagZ.TabIndex = 10;
+            this.tbFlagZ.TabStop = false;
+            this.tbFlagZ.Text = "0";
+            this.tbFlagZ.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // tbFlagC
+            // 
+            this.tbFlagC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbFlagC.Location = new System.Drawing.Point(53, 26);
+            this.tbFlagC.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tbFlagC.MaxLength = 1;
+            this.tbFlagC.Name = "tbFlagC";
+            this.tbFlagC.Size = new System.Drawing.Size(16, 19);
+            this.tbFlagC.TabIndex = 7;
+            this.tbFlagC.TabStop = false;
+            this.tbFlagC.Text = "0";
+            this.tbFlagC.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // MainForm
+            // 
+            this.AllowDrop = true;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1188, 577);
+            this.Controls.Add(this.gbWatches);
+            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.mainMenu);
+            this.Controls.Add(this.gbControls);
+            this.Controls.Add(this.pbEmuScreen);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.gbSource);
+            this.Controls.Add(this.gbRegisters);
+            this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.MainMenuStrip = this.mainMenu;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Name = "MainForm";
+            this.Text = "nChip16";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mainForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.mainForm_KeyUp);
+            this.gbRegisters.ResumeLayout(false);
+            this.gbRegisters.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.gbSource.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.gbControls.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbEmuScreen)).EndInit();
+            this.cmsSetLastSource.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
+            this.gbWatches.ResumeLayout(false);
+            this.cmsWatchesMenu.ResumeLayout(false);
+            this.mainMenu.ResumeLayout(false);
+            this.mainMenu.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Timer emuTimer;
+        private System.Windows.Forms.GroupBox gbRegisters;
+        private System.Windows.Forms.Label lblI;
+        private System.Windows.Forms.Label lblPC;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private KeyHandleTextBox tbFlagN;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private KeyHandleTextBox tbSP;
+        private KeyHandleTextBox tbPC;
+        private KeyHandleTextBox tbFlagO;
+        private KeyHandleTextBox tbFlagZ;
+        private KeyHandleTextBox tbFlagC;
+        private GroupBox gbSource;
+        private RichTextBox tbSource;
+        private GroupBox groupBox3;
+        private MW.HexEdit.HexEdit hexEdit1;
+        private GroupBox gbControls;
+        private KeyHandleButton btnStep;
+        private KeyHandleButton btnStepInto;
+        private KeyHandleButton btnRun;
+        private KeyHandleButton btnReset;
+        private PictureBox pbEmuScreen;
+        private ContextMenuStrip cmsSetLastSource;
+        private ToolStripMenuItem cmsiSetLastSource;
+        private StatusStrip statusStrip1;
+        private CheckBox cbRealtimeRegisterUpdate;
+        private GroupBox gbWatches;
+        private ListView lvWatches;
+        private ColumnHeader chName;
+        private ColumnHeader chAddress;
+        private ColumnHeader chValue;
+        private ToolStripStatusLabel toolStripStatusLabel1;
+        private ToolStripStatusLabel tsslInitialPC;
+        private ToolStripStatusLabel toolStripStatusLabel5;
+        private ToolStripStatusLabel tsslSpecVersion;
+        private ToolStripStatusLabel toolStripStatusLabel7;
+        private ToolStripStatusLabel tssLabelRomSize;
+        private ToolStripStatusLabel tsslRomSize;
+        private ToolStripStatusLabel tsslRomName;
+        private MenuStrip mainMenu;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem openToolStripMenuItem;
+        private ToolStripMenuItem dumpMemoryToolStripMenuItem;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private ContextMenuStrip cmsWatchesMenu;
+        private ToolStripMenuItem addWatchToolStripMenuItem;
+        private ToolStripMenuItem editWatchToolStripMenuItem;
+        private ToolStripMenuItem deleteWatchToolStripMenuItem;
+        private CheckBox cbRealtimeWatches;
+        private ToolStripMenuItem settingsToolStripMenuItem;
+        private ToolStripMenuItem tmsiWaitForVBLANK;
+        private ToolStripStatusLabel tssLabelChip16Usage;
+        private ToolStripStatusLabel tsslChip16Usage;
+        private Timer slowTimer;
+    }
+}
+

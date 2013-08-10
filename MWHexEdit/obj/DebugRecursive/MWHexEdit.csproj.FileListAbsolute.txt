@@ -1,0 +1,9 @@
+C:\Projects\UlppEmu\MWHexEdit\bin\DebugRecursive\MWHexEdit.dll.config
+C:\Projects\UlppEmu\MWHexEdit\bin\DebugRecursive\MWHexEdit.dll
+C:\Projects\UlppEmu\MWHexEdit\bin\DebugRecursive\MWHexEdit.pdb
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugRecursive\ResolveAssemblyReference.cache
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugRecursive\MW.HexEdit.HexEdit.resources
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugRecursive\GenerateResource.read.1.tlog
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugRecursive\GenerateResource.write.1.tlog
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugRecursive\MWHexEdit.dll
+C:\Projects\UlppEmu\MWHexEdit\obj\DebugRecursive\MWHexEdit.pdb

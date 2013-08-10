@@ -1,0 +1,12 @@
+C:\Projects\nChip16\nChip16\bin\Debug\nChip16.exe.config
+C:\Projects\nChip16\nChip16\obj\Debug\nChip16.Properties.Resources.resources
+C:\Projects\nChip16\nChip16\obj\Debug\nChip16.csproj.GenerateResource.Cache
+C:\Projects\nChip16\nChip16\bin\Debug\nChip16.exe
+C:\Projects\nChip16\nChip16\bin\Debug\nChip16.pdb
+C:\Projects\nChip16\nChip16\obj\Debug\nChip16.exe
+C:\Projects\nChip16\nChip16\obj\Debug\nChip16.pdb
+C:\Projects\nChip16\nChip16\obj\Debug\nChip16.MainForm.resources
+C:\Projects\nChip16\nChip16\obj\Debug\nChip16.csprojResolveAssemblyReference.cache
+C:\Projects\nChip16\nChip16\bin\Debug\MWHexEdit.dll
+C:\Projects\nChip16\nChip16\bin\Debug\MWHexEdit.pdb
+C:\Projects\nChip16\nChip16\obj\Debug\nChip16.WatchForm.resources

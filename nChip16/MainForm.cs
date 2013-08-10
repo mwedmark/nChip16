@@ -1,0 +1,997 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace nChip16
+{
+    public partial class MainForm : Form
+    {
+        private Form BackupForm = new Form();
+
+        private MemBitmap memBitmap;
+        private Chip16VM vm = new Chip16VM();
+        private bool Running = false;
+        private ushort KeyboardState = 0;
+        private string FileDropped;
+        private bool AutoStart = false;
+        private bool FullScreen = false;
+
+        public static readonly Color BreakpointColor = Color.Red;
+        public static readonly Color ProgramCounterColor = Color.Yellow;
+        public static readonly Color BreakpointOnPcColor = Color.Orange;
+
+        private readonly List<RegisterTextBox> Registers = new List<RegisterTextBox>();
+        private List<Watch> Watches = new List<Watch>();
+        private int endOfProgram = 0;
+
+        public MainForm(string[] args)
+        {
+            InitializeComponent();
+            KeyPreview = true;
+            vm.OnPCChange += vm_OnPCChange;
+
+            // show version in window title
+            var assemblyInfoReader = new AssemblyInfoHelper(GetType());
+
+            Text = assemblyInfoReader.Title + " v" + assemblyInfoReader.AssemblyVersion;
+
+            // dynamically create all register TextBox's and add them to both Form and Registers array
+            for (int i = 0; i < 16;i++ )
+                Registers.Add(CreateRegisterTextBox("R" + i.ToString("X1"), new Point(25 + (i/8*70), 70+((i%8)*25)), i));
+
+            // setup tags for SP and PC
+            tbPC.Tag = 16;
+            tbSP.Tag = 17;
+
+            // is a single parameters used? Then this is a Chip16 file to load at startup
+            if (args.Length == 2)
+                FileDropped = args[1];
+
+            vm.Memory.OnWriteByte += Memory_OnWriteByte;
+            vm.Memory.OnWriteWord += Memory_OnWriteWord;
+            LoadAndRestart();
+        }
+
+        //maybe we dont need this, but instead can reread all watches 
+        // at stop, mem change, Step and these.
+        void Memory_OnWriteWord(int address, ushort value)
+        {
+            /*
+            var updatedWatches = Watches.FindAll(w => w.Address == address);
+
+            
+            foreach (var updatedWatch in updatedWatches)
+            {
+                updatedWatch.
+            }*/
+        }
+
+        void Memory_OnWriteByte(int address, byte value)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private RegisterTextBox CreateRegisterTextBox(string registerName, Point location, int vmRegisterIndex)
+        {
+            var textBox = new RegisterTextBox();
+            var label = new Label();
+
+            textBox.Name = "tb" + registerName;
+            textBox.Tag = vmRegisterIndex;
+            textBox.Font = new Font("Lucida Console", 8.3F, FontStyle.Regular, GraphicsUnit.Point, (0));
+            textBox.Location = location;
+            textBox.Size = new Size(40, 19);
+            textBox.TabIndex = 41;
+            textBox.TabStop = false;
+            textBox.Text = "0000";
+            textBox.MaxLength = 4;
+            textBox.TextAlign = HorizontalAlignment.Center;
+            textBox.TextChanged += textBox_TextChanged;
+            textBox.KeyDown += textBox_KeyDown;  
+
+            label.Size = new Size(20, 19);
+            label.Name = "lbl" + registerName;
+            label.Text = registerName;
+            label.Location = new Point(location.X-20,location.Y+4);
+
+            gbRegisters.Controls.Add(textBox);
+            gbRegisters.Controls.Add(label);
+
+            return textBox;
+        }
+
+        void textBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            var textBox = (KeyHandleTextBox)sender;
+            var vmRegisterIndex = (int)textBox.Tag;
+
+            ushort value = ushort.Parse(textBox.Text, NumberStyles.HexNumber);
+            
+            if(vmRegisterIndex < 16)
+                vm.Regs[vmRegisterIndex] = value;
+            else
+            {
+                switch (vmRegisterIndex)
+                {
+                    case 16:
+                        vm.PC = value;
+                        break;
+                    case 17:
+                        vm.SP = value;
+                        break;
+                    default:
+                        throw new Exception("Invalid tag given in textBox_KeyDown");
+                        break;
+
+                }
+
+                
+            }
+        }
+
+        void textBox_TextChanged(object sender, EventArgs e)
+        {
+            /*
+            var textBox = (KeyHandleTextBox)sender;
+
+            if (textBox.Tag == null)
+                return;
+
+            var vmRegisterIndex = (int)textBox.Tag;
+
+            ushort value = ushort.Parse(textBox.Text, NumberStyles.HexNumber);
+            vm.Regs[vmRegisterIndex] = value;
+             */
+        }
+
+        private void vm_OnPCChange(ushort oldValue, ushort newValue)
+        {
+            //vm.PC = newValue;
+ 
+            if (Running || string.IsNullOrEmpty(tbSource.Text))
+                return;
+
+            //var rowLength = tbSource.Lines[0].Length + 1;
+            //tbSource.Select(rowLength * oldValue, rowLength);
+            //tbSource.SelectionBackColor = Color.White;
+            //tbSource.Select(rowLength * newValue, rowLength);
+            //tbSource.SelectionBackColor = ProgramCounterColor;
+            RemovePcHighlight();
+            MarkWithHighlight(tbSource, newValue);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            UpdateRegisterFields();
+            var cmd = Environment.GetCommandLineArgs();
+            var pathInCommandLine = (cmd.Count() == 2);
+            try
+            {
+                memBitmap = new MemBitmap(pbEmuScreen.Width, pbEmuScreen.Height);
+                pbEmuScreen.Image = memBitmap.Bitmap;
+                //memBitmap.Bitmap.SetPixel(100, 100, Color.White);
+                pbEmuScreen.DrawToBitmap(memBitmap.Bitmap, new Rectangle(0, 0, 320, 240));
+                vm.SetScreen(memBitmap);
+                vm.GetKeyboardState += vm_GetKeyboardState;
+
+                if (pathInCommandLine)
+                {
+                    FileDropped = Environment.GetCommandLineArgs()[1];
+                    LoadAndRestart();
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void UpdateSourceTextBox(uint lastSourceLine)
+        {
+            if (vm != null && vm.currentFileStructure != null)
+            {
+                var endOfSource = (lastSourceLine+1)*Chip16VM.InstructionSize;
+                vm.RenderOpcodes(tbSource, endOfSource);
+                
+                if(vm.CurrentState != RunningState.Running)
+                    MarkWithHighlight(tbSource, vm.PC);
+            }
+        }
+
+        public uint vm_GetKeyboardState()
+        {
+            return KeyboardState;
+        }
+
+        private void mainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            // is C# application key?
+            switch (e.KeyCode)
+            {
+                case Keys.F1:
+                    InvokeOnClick(btnReset, new EventArgs());
+                    e.Handled = true;
+                    break;
+                case Keys.F5:
+                    InvokeOnClick(btnRun, new EventArgs());
+                    e.Handled = true;
+                    break;
+                case Keys.F10:
+                    InvokeOnClick(btnStep, new EventArgs());
+                    e.Handled = true;
+                    break;
+                case Keys.F11:
+                    InvokeOnClick(btnStepInto, new EventArgs());
+                    e.Handled = true;
+                    break;
+            }
+
+            // is Chip16 emulator key?
+            var bitValueAddress = GetKeyboardBitValue(e.KeyCode);
+
+            if (bitValueAddress.Item2 != 0) Debug.WriteLine(" pressed.");
+
+            // apply changes to current keyboard state
+            KeyboardState = (ushort)(KeyboardState | bitValueAddress.Item2);
+        }
+
+        private void mainForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            var bitValueAddress = GetKeyboardBitValue(e.KeyCode);
+            var negatedBitValue = (ushort)(0xFFFF ^ bitValueAddress.Item2);
+
+            if (bitValueAddress.Item2 != 0) Debug.WriteLine(" released.");
+            // apply changes to current keyboard state
+            KeyboardState = (ushort)(KeyboardState & negatedBitValue);
+        }
+
+        ///Controllers:
+        ///-------------
+        ///Controllers are accessed through memory mapped I/O ports.
+        ///Controller 1: FFF0.
+        ///Controller 2: FFF2.
+
+        ///Bit[0] - Up
+        ///Bit[1] - Down
+        ///Bit[2] - Left
+        ///Bit[3] - Right
+        ///Bit[4] - Select
+        ///Bit[5] - Start
+        ///Bit[6] - A
+        ///Bit[7] - B
+        ///Bit[8 - 15] - Unused (Always zero).
+        private Tuple<int,ushort> GetKeyboardBitValue(Keys keys)
+        {
+            int address = 0;
+            ushort bitValue = 1;
+            int shiftSteps = 0;
+
+            var joyMove = TranslateKeyToChip16Joysticks(keys);
+
+            switch (joyMove.JoystickNumber)
+            {
+                case (0): address = 0xFFF0;
+                    break;
+                case (1): address = 0xFFF2;
+                    break;
+                default:
+                    throw new Exception("Invalid joystick number");
+            }
+
+            switch (joyMove.Change)
+            {
+                case JoystickMoves.Up:
+                    shiftSteps = 0;
+                    break;
+                case JoystickMoves.Down:
+                    shiftSteps = 1;
+                    break;
+                case JoystickMoves.Left:
+                    shiftSteps = 2;
+                    break;    
+                case JoystickMoves.Right:
+                    shiftSteps = 3;
+                    break;
+                case JoystickMoves.Select:
+                    shiftSteps = 4;
+                    break;
+                case JoystickMoves.Start:
+                    shiftSteps = 5;
+                    break;
+                case JoystickMoves.A:
+                    shiftSteps = 6;
+                    break;
+                case JoystickMoves.B:
+                    shiftSteps = 7;
+                    break;
+            }
+
+            if (bitValue != 0)
+                Debug.Write(string.Format("Key: '{0}' ", joyMove.ToString()));
+
+            bitValue <<= shiftSteps;
+            return new Tuple<int, ushort>(address, bitValue);
+        }
+
+        private static Joystick TranslateKeyToChip16Joysticks(Keys keys)
+        {
+            var joystick = new Joystick();
+            joystick.JoystickNumber = 0;
+
+            switch (keys)
+            {
+                case Keys.Up:   //UP
+                    joystick.Change = JoystickMoves.Up;
+                    break;
+                case Keys.Down: //DOWN
+                    joystick.Change = JoystickMoves.Down;
+                    break;
+                case Keys.Left: //LEFT
+                    joystick.Change = JoystickMoves.Left;
+                    break;
+                case Keys.Right: //RIGHT
+                    joystick.Change = JoystickMoves.Right;
+                    break;
+                case Keys.A:    //SELECT
+                    joystick.Change = JoystickMoves.Select;
+                    break;
+                case Keys.S:    //START
+                    joystick.Change = JoystickMoves.Start;
+                    break;
+                case Keys.Z:   //A
+                    joystick.Change = JoystickMoves.A;
+                    break;
+                case Keys.X:   //B
+                    joystick.Change = JoystickMoves.B;
+                    break;
+                default:
+                    joystick.Change = JoystickMoves.NotMapped;
+                    break;
+            }
+
+            return joystick;
+        }
+
+        private void emuTimer_Tick(object sender, EventArgs e)
+        {
+            emuTimer.Enabled = true;
+             ExecuteFrame();
+
+            if(cbRealtimeRegisterUpdate.Checked)
+                UpdateRegisterFields();
+
+            if (cbRealtimeWatches.Checked)
+                UpdateWatchValues();
+        }
+
+        private void UpdateRegisterFields()
+        {
+            tbPC.Text = Utils.UShortToHex16BitFormat(vm.PC);
+            tbSP.Text = Utils.UShortToHex16BitFormat(vm.SP);
+            
+            for (int i = 0; i < 16; i++)
+            {
+                var reg = Registers[i];
+                var readValue = vm.Regs[i];
+                
+                // TODO: Buggy at start-up, inital values aren't updated, so we skip this for now
+                // only update register field if value actually changes.
+                // Optimization done to be able to change rarely changing registers
+                // while updating them in real-time
+                //if (reg.LastValue == readValue)
+                //    return;
+
+                reg.LastValue = readValue;
+                reg.Text = Utils.UShortToHex16BitFormat(readValue);
+            }
+
+            tbFlagC.Text = Utils.ConvertBoolToNumber(vm.Flags.C);
+            tbFlagN.Text = Utils.ConvertBoolToNumber(vm.Flags.N);
+            tbFlagO.Text = Utils.ConvertBoolToNumber(vm.Flags.O);
+            tbFlagZ.Text = Utils.ConvertBoolToNumber(vm.Flags.Z);
+        }
+
+        private int Chip16Usage = 0;
+
+        private void ExecuteFrame()
+        {
+            //var vmState = newFrameEvent();
+            Chip16Usage = vm.ExecuteFrame();
+            
+            // update graphics and sound via buffer pointers
+            //BuildGraphics(0);
+            UpdateScreen();
+
+            // check running flag for breakpoint
+            if (vm.CurrentState == RunningState.Paused)
+            {
+                // we've hit a breakpoint, pause, then stop timer and set mode to Paused
+                //InvokeOnClick(btnRun, null);
+                ToggleRunState();
+            }
+        }
+
+        private void UpdateSlowGraphics()
+        {
+            tsslChip16Usage.Text =
+                string.Format("[{0}/{1}] {2}%", Chip16Usage, Chip16VM.instructionsPerFrame,
+                              (int)(Chip16Usage * 100.0 / Chip16VM.instructionsPerFrame)); 
+        }
+
+        private void UpdateScreen()
+        {
+            pbEmuScreen.Invalidate();
+            pbEmuScreen.Refresh();
+        }
+
+        private void UpdateAllControls()
+        {
+            UpdateScreen();
+            UpdateRegisterFields();
+            UpdateSourceTextBox((uint)endOfProgram); // use romsize as limit for source rendering if 0
+            hexEdit1.RenewVisibleValues();
+            UpdateWatchValues();
+        }
+
+        private void UpdateWatchValues()
+        {
+            foreach (ListViewItem lvWatch in lvWatches.Items)
+                UpdateWatchValue(lvWatch);
+        }
+
+        /// <summary>
+        /// Support for loading and starting a Chip16 binary file when dropped.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        {
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            // only handle a single file drop
+            if (files.Count() != 1)
+                return;
+
+            FileDropped = files[0];
+            LoadAndRestart();
+        }
+
+        private void LoadAndRestart()
+        {
+             // first make full reset of vm
+            vm.Reset();
+
+            // then load and start program
+            if (!string.IsNullOrEmpty(FileDropped))
+                vm.LoadProgram(FileDropped);
+
+            // after program has loaded, maybe labels have been updated. 
+            // Update watches that use LockTo: Label
+            if(vm.UsingLineLabels && (Watches.Count > 0))
+            {
+                var lockToLabelWatches = Watches.Where(w => w.LockTo == LockTo.Label);
+
+                foreach (var watch in lockToLabelWatches)
+                {
+                    var watchName = watch.Name;
+                    var matchedLabels = vm.Labels.FindAll(l => l.Name == watchName);
+                    if(matchedLabels.Count != 1)
+                        continue;
+
+                    watch.Address = matchedLabels[0].Address;
+                }
+                // redraw lvWatches
+                RedrawWatches();
+            }
+
+            // update rom info
+            if(vm.currentFileStructure != null)
+            {
+                tsslRomName.Text = Path.GetFileName(vm.currentFileStructure.Path);
+                tsslInitialPC.Text = "0x" + Utils.UShortToHex16BitFormat(vm.currentFileStructure.StartAddress);
+                tsslRomSize.Text = (vm.currentFileStructure.RomSize +16).ToString() + " bytes"; // 16 bytes header size
+                tsslSpecVersion.Text = vm.currentFileStructure.SpecVersionString;
+            }
+
+            hexEdit1.SetData(vm.Memory.GetInternalMemoryArray(), 0);
+
+            if(vm.currentFileStructure != null)
+                endOfProgram = (int)(vm.currentFileStructure.RomSize/Chip16VM.InstructionSize);
+            
+            if (vm.UsingLineLabels)
+            {
+                // if label EndOfProgram is found, use this to further minimize source listing
+                var endOfProgramLabel = vm.Labels.FindAll(l => l.Name == "EndOfProgram");
+
+                if (endOfProgramLabel.Count == 1)
+                    endOfProgram = endOfProgramLabel[0].Address/Chip16VM.InstructionSize;
+            }
+
+            // update starting source code
+            UpdateAllControls();
+
+            if (AutoStart)
+            {
+                emuTimer.Enabled = true;
+                Running = true;
+                vm.CurrentState = RunningState.Running;
+            }
+        }
+
+        private void RedrawWatches()
+        {
+            // first remove all watches from lvWatches
+            lvWatches.Items.Clear();
+            // recreate all watches using Watches list
+            foreach (var watch in Watches)
+                AddWatchToListView(watch);
+        }
+
+        private void AddWatchToListView(Watch watch)
+        {
+            var lvItem = new ListViewItem { Tag = watch };
+            lvItem.SubItems.Add("Address");
+            lvItem.SubItems.Add("Value");
+            UpdateListViewItemWithWatch(lvItem);
+            lvWatches.Items.Add(lvItem);
+        }
+
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Link;
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            ToggleRunState();
+        }
+
+        private void ToggleRunState()
+        {
+            if (!Running)
+            {
+                slowTimer.Enabled = true;
+                RemovePcHighlight();
+                btnRun.Text = "Stop (F5)";
+                Running = true;
+                emuTimer.Enabled = true;
+                vm.CurrentState = RunningState.Running;
+                
+            }
+            else
+            {
+                slowTimer.Enabled = false;
+                tsslChip16Usage.Text = "-%";
+                btnRun.Text = "Run  (F5)";
+                Running = false;
+                emuTimer.Enabled = false;
+                vm.CurrentState = RunningState.Paused;
+                UpdateAllControls();
+            }
+        }
+
+        private void btnStepInto_Click(object sender, EventArgs e)
+        {
+            emuTimer.Enabled = false;
+            Running = true;
+            ToggleRunState();
+
+            vm.ExecuteInstruction();
+            UpdateAllControls();
+        }
+
+        private void btnStep_Click(object sender, EventArgs e)
+        {
+            emuTimer.Enabled = false;
+            Running = true;
+            ToggleRunState();
+
+            Running = false; // to disable graphics update while performing StepOver
+            vm.ExecuteStepOver();
+            Running = false;
+            UpdateAllControls();
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            //emuTimer.Enabled = false;
+            //Running = false;
+            Running = true;
+            ToggleRunState();
+
+            //if(!string.IsNullOrEmpty(FileDropped))
+            LoadAndRestart();
+        }
+
+        private void tbSP_Enter(object sender, EventArgs e)
+        {
+        }
+
+        /// <summary>
+        ///  Toggle breakpoint on current line
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbSource_DoubleClick(object sender, EventArgs e)
+        {
+            // first calculate which line is active
+            var selectedLine = tbSource.GetLineFromCharIndex(tbSource.SelectionStart);
+            var address = (ushort)(selectedLine*Chip16VM.InstructionSize);
+            // Then toggle breakpoint
+            var newState = vm.ToggleBreakpoint(address);
+            var backColor = tbSource.BackColor;
+
+            // Update graphics for specific line
+            if (newState)
+                backColor = BreakpointColor;
+
+            if (address == vm.PC)
+                backColor = newState?BreakpointOnPcColor:ProgramCounterColor;
+
+            SetBackgroundColorOfLine(selectedLine, backColor);
+            tbSource.Select(tbSource.GetFirstCharIndexFromLine(selectedLine),0);
+        }
+
+        public void MarkWithHighlight(RichTextBox rtbSource, ushort value)
+        {
+            rtbSource.Focus();
+            var currentLine = value / 4;
+            var startIndex = rtbSource.GetFirstCharIndexFromLine(currentLine);
+            var length = rtbSource.Lines[currentLine].Length;
+
+            // Mark current PC
+            rtbSource.Select(startIndex, length);
+
+            var backColor = ProgramCounterColor;
+
+            if (vm.BreakpointAtCurrentPc())
+                backColor = BreakpointOnPcColor;
+
+            rtbSource.SelectionBackColor = backColor;
+            //rtbSource.ScrollToCaret();  
+            //TODO: Fix so that this only scrolls if target is off-screen. 
+            //ScrollToMakeLineVisible(rtbSource, currentLine);
+            rtbSource.Select(0,0); 
+        }
+
+        /// <summary>
+        /// Found at http://www.codeproject.com/Articles/12152/Numbering-lines-of-RichTextBox-in-NET-2-0
+        /// </summary>
+        /// <param name="textBox">The textbox to scroll</param>
+        /// <param name="line">The line to make sure it is visible</param>
+        private void ScrollToMakeLineVisible(RichTextBox textBox, int scrollToLine)
+        {
+            //we get index of first visible char and 
+            //number of first visible line
+            var pos = new Point(0, 0);
+            int firstIndex = textBox.GetCharIndexFromPosition(pos);
+            int firstLine = textBox.GetLineFromCharIndex(firstIndex);
+
+            //now we get index of last visible char 
+            //and number of last visible line
+            pos.X = ClientRectangle.Width;
+            pos.Y = ClientRectangle.Height;
+            int lastIndex = textBox.GetCharIndexFromPosition(pos);
+            int lastLine = textBox.GetLineFromCharIndex(lastIndex);
+
+            if (scrollToLine >= firstLine && scrollToLine <= lastLine)
+                return; // line already visible
+
+            MessageBox.Show("Line not visible");
+        }
+
+        private void RemovePcHighlight()
+        {
+            var currentLine = vm.PC / Chip16VM.InstructionSize;
+            var startIndex = tbSource.GetFirstCharIndexFromLine(currentLine);
+            var length = tbSource.Lines[currentLine].Length;
+
+            // unmark current PC
+            tbSource.Select(startIndex, length);
+            var backColor = tbSource.BackColor;
+
+            if (vm.BreakpointAtCurrentPc())
+                backColor = BreakpointColor;
+
+            tbSource.SelectionBackColor = backColor;
+            tbSource.Select(0,0);
+        }
+
+        private void SetBackgroundColorOfLine(int lineIndex, Color backgroundColor)
+        {
+            //var currentLine = vm.PC / 4;
+            var startIndex = tbSource.GetFirstCharIndexFromLine(lineIndex);
+            var length = tbSource.Lines[lineIndex].Length;
+
+            // Mark current line with given color
+            tbSource.Select(startIndex, length);
+            tbSource.SelectionBackColor = backgroundColor;
+        }
+
+        void cmsiSetLastSource_Click(object sender, System.EventArgs e)
+        {
+            var currentLine = tbSource.GetLineFromCharIndex(tbSource.SelectionStart);
+            endOfProgram = currentLine;
+            UpdateSourceTextBox((uint)endOfProgram);
+
+            //select the last line
+            tbSource.Select(tbSource.GetFirstCharIndexFromLine(currentLine),0);
+            // and move there because thats were we where before..
+            tbSource.ScrollToCaret();
+        }
+
+        private void tbSource_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // move selection to current mouse positon
+                var mousePostionInSource = tbSource.PointToClient(Cursor.Position);
+                var lineUnderMouseCursor = tbSource.GetLineFromCharIndex(tbSource.GetCharIndexFromPosition(mousePostionInSource));
+                var firstChar = tbSource.GetFirstCharIndexFromLine(lineUnderMouseCursor);
+                tbSource.Select(firstChar,0);
+                cmsSetLastSource.Show(tbSource, mousePostionInSource);
+            }
+        }
+
+        private void tbSource_MouseMove(object sender, MouseEventArgs e)
+        {
+            //var mousePostionInSource = tbSource.PointToClient(Cursor.Position);
+            //var lineUnderMouseCursor = tbSource.GetLineFromCharIndex(tbSource.GetCharIndexFromPosition(mousePostionInSource));
+            //tsslCurrentLine.Text = lineUnderMouseCursor.ToString();
+        }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pbEmuScreen_Click(object sender, EventArgs e)
+        {
+            if (!FullScreen)
+            {
+                // back-up current state
+                BackupForm.FormBorderStyle = FormBorderStyle;
+                BackupForm.WindowState = WindowState;
+                BackupForm.BackColor = BackColor;
+                BackupForm.Location = pbEmuScreen.Location;
+                BackupForm.Size = pbEmuScreen.Size;
+
+                // set new state
+                FormBorderStyle = FormBorderStyle.None;
+                WindowState = FormWindowState.Maximized;
+                gbRegisters.Visible = false;
+                gbControls.Visible = false;
+                gbWatches.Visible = false;
+                statusStrip1.Visible = false;
+                groupBox1.Visible = false;
+                groupBox3.Visible = false;
+                gbSource.Visible = false;
+                mainMenu.Visible = false;
+
+                BackColor = Color.Black;
+
+                // size bitmap to keep same ratio but full-screen
+                var screenSize = Screen.PrimaryScreen.Bounds;
+
+                var ratio = screenSize.Height/240.0;
+                var newX = 320.0 * ratio;
+                var newY = 240.0 * ratio;
+                pbEmuScreen.Location = new Point((int)(screenSize.Width-newX)/2, 0);
+                pbEmuScreen.Size = new Size((int)newX, (int)newY);
+
+                FullScreen = true;
+            }
+            else
+            {
+                // recover back-up state
+                FormBorderStyle = BackupForm.FormBorderStyle;
+                WindowState = BackupForm.WindowState;
+                BackColor = BackupForm.BackColor;
+                pbEmuScreen.Location = BackupForm.Location;
+                pbEmuScreen.Size =  BackupForm.Size;
+                BackColor = BackupForm.BackColor;
+
+                gbRegisters.Visible = true;
+                gbControls.Visible = true;
+                gbWatches.Visible = true;
+                statusStrip1.Visible = true;
+                groupBox1.Visible = true;
+                groupBox3.Visible = true;
+                gbSource.Visible = true;
+                mainMenu.Visible = true;
+
+                FullScreen = false;
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "Chip16 executable (*.C16)|*.C16";
+            var result = fileDialog.ShowDialog(this);
+
+            if (result != DialogResult.OK)
+                return;
+
+            // File has been selected, load it!
+            FileDropped = fileDialog.FileName;
+            LoadAndRestart();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        
+        private void lvWatches_MouseDown(object sender, MouseEventArgs e)
+        {
+            
+            //lvWatches.SelectedIndices.Add(lvWatches.Inde(e.X, e.Y));
+            Point mousePosition = lvWatches.PointToClient(Control.MousePosition);
+            ListViewHitTestInfo hit = lvWatches.HitTest(mousePosition);
+            if(hit.Item != null)
+            {
+                var indexUnderCursor = hit.Item.Index;
+                lvWatches.SelectedIndices.Add(indexUnderCursor);
+            }
+
+            bool hasSelected = lvWatches.SelectedItems.Count != 0;
+
+            cmsWatchesMenu.Items[1].Enabled = hasSelected;
+            cmsWatchesMenu.Items[2].Enabled = hasSelected;
+
+            //if (e.Button == MouseButtons.Right)
+            {
+                /*
+                var mousePostionInSource = lvWatches.PointToClient(Cursor.Position);
+                //var lineUnderMouseCursor = lvWatches.GetLineFromCharIndex(tbSource.GetCharIndexFromPosition(mousePostionInSource));
+                
+                // set enable mode for all alternatives before showing menu
+                bool hasSelected = lvWatches.SelectedItems.Count != 0;
+
+                cmsWatchesMenu.Items[1].Enabled = hasSelected;
+                cmsWatchesMenu.Items[2].Enabled = hasSelected;
+ 
+                cmsWatchesMenu.Show(lvWatches, mousePostionInSource);
+                 * */
+            }
+        }
+        
+
+        private void addWatchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var watchForm = new WatchForm();
+
+            if(vm.Labels.Count != 0)
+                watchForm.InitializeLabels(vm.Labels);
+
+            watchForm.StartPosition = FormStartPosition.CenterParent;
+            watchForm.Text = "Create Watch";
+            var result =  watchForm.ShowDialog(lvWatches);
+
+            if (result != DialogResult.OK)
+                return;
+
+            // add a new watch
+            Watches.Add(watchForm.Watch);   
+            AddWatchToListView(watchForm.Watch);
+
+            UpdateWatchValues();
+        }
+
+        private void UpdateListViewItemWithWatch(ListViewItem lvi)
+        {
+            var watch = (Watch)lvi.Tag;
+            lvi.SubItems[0].Text = watch.Name;
+            lvi.SubItems[1].Text = Utils.UShortToHex16BitFormat(watch.Address);
+             
+            UpdateWatchValue(lvi);
+        }
+
+        private string FormatWatchValue(ushort value, ShowAs showAs)
+        {
+            switch (showAs)
+            {
+                    case ShowAs.Hexadecimal:
+                    return Utils.UShortToHex16BitFormat(value);
+                    case ShowAs.Decimal:
+                    return value.ToString();
+                    case ShowAs.Binary:
+                    return Utils.FormatBinary(value);
+                    break;
+                default:
+                    throw new Exception("Unknown format specified for watch");
+            }
+        }
+
+        private string FormatWatchValue(byte value, ShowAs showAs)
+        {
+            switch (showAs)
+            {
+                case ShowAs.Hexadecimal:
+                    return value.ToString("X2");
+                case ShowAs.Decimal:
+                    return value.ToString();
+                case ShowAs.Binary:
+                    return Utils.FormatBinary(value);
+                default:
+                    throw new Exception("Unknown format specified for watch");
+            }
+        }
+
+        private void UpdateWatchValue(ListViewItem listItem)
+        {
+            var watch = (Watch) listItem.Tag;
+            if (watch.Type == WatchType.Byte)
+                listItem.SubItems[2].Text = FormatWatchValue(vm.Memory.ReadByte(watch.Address),watch.ShowAs);
+            else
+                listItem.SubItems[2].Text = FormatWatchValue(vm.Memory.ReadWord(watch.Address), watch.ShowAs);
+        }
+
+        private void editWatchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // get the selected Watch
+            var lvi = lvWatches.SelectedItems[0];
+            var selectedWatch = (Watch)lvi.Tag;
+            var watchForm = new WatchForm(selectedWatch);
+            if (vm.Labels.Count != 0)
+                watchForm.InitializeLabels(vm.Labels);
+
+            watchForm.StartPosition = FormStartPosition.CenterParent;
+            watchForm.Text = "Edit Watch";
+            var result = watchForm.ShowDialog(lvWatches);
+
+            UpdateListViewItemWithWatch(lvi);
+
+            if (result != DialogResult.OK)
+                return;
+        }
+
+        private void deleteWatchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteSelectedWatch();
+        }
+
+        private void DeleteSelectedWatch()
+        {
+            if (lvWatches.SelectedItems.Count == 0)
+                return;
+
+            // get the selected Watch
+            var lvi = lvWatches.SelectedItems[0];
+            var selectedWatch = (Watch)lvi.Tag;
+
+            // delete both lvi and watch
+            Watches.Remove(selectedWatch);
+            lvWatches.SelectedItems[0].Remove();
+        }
+
+        private void lvWatches_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+                DeleteSelectedWatch();
+        }
+
+        private void hexEdit1_OnDataChanged(object sender, MW.HexEdit.DataChangedEventArgs argsDataChanged)
+        {
+            UpdateWatchValues();
+        }
+
+        private void tmsiWaitForVBLANK_Click(object sender, EventArgs e)
+        {
+            tmsiWaitForVBLANK.Checked = !tmsiWaitForVBLANK.Checked;
+        }
+
+        private void slowTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateSlowGraphics();
+        }
+    }
+}
