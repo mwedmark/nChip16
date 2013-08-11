@@ -1,4 +1,4 @@
-TODO list, combination of bugs and features that may appear:
+TODO list, combination of bugs and features that may appear: 
 
 1.5) Still Alien problems after first shot..
 3) Fix Background bug, even a late change changes ALL colors previously drawn with that color
