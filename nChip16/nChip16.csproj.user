@@ -4,6 +4,6 @@
     <StartArguments>C:\Share\Chip16\tchip16_1.4.5\output.c16</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <StartArguments>C:\Share\Chip16\tchip16_1.4.5\sierpinski.c16</StartArguments>
+    <StartArguments>C:\Share\Chip16\tchip16_1.4.5\ShowImage.c16</StartArguments>
   </PropertyGroup>
 </Project>

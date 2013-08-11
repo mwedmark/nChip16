@@ -260,6 +260,7 @@ namespace nChip16
                     break;
                 case 0x01: // CLS
                     ClearScreen();
+                    bgc = 0;
                     break;
                 case 0x02: // VBLNK
                     PC += 4;

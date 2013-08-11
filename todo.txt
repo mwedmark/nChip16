@@ -21,7 +21,7 @@ TODO list, combination of bugs and features that may appear:
 37) When labels is present on current line, make it posible to "Follow Label" or "Follow address". This is used the recompiling and using the same Watches. If chosen "Follow Label", the watch shall move to new location.
 38) Run form a line with a BP does not move (stuck on BP inital round)
 39) Known bug that it is not possible to update registers by hand while the setting Real-time update is on and state of Chip-16 is Running.
-
+40) Bug: Not finding mmap.txt if ROM is not given with full path.
 1) * Fix bugs with background that make Alien crash, Boing get woring color on grid and make Pacman get stuck (maybe same as 3)
 1.2) * Bugs with Breakpoints, More than one line goes Orange, Breakpoints don't turn and stay red.
 2) * Implement SpriteFlip, bug with some directions o FLIP (flip_test is not seen 100% of time)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,13 +13,14 @@ namespace nChip16
     public partial class MainForm : Form
     {
         private Form BackupForm = new Form();
+        private bool WasPanel2Collapsed = false;
 
         private MemBitmap memBitmap;
         private Chip16VM vm = new Chip16VM();
         private bool Running = false;
         private ushort KeyboardState = 0;
         private string FileDropped;
-        private bool AutoStart = false;
+        //private bool AutoStart = false;
         private bool FullScreen = false;
 
         public static readonly Color BreakpointColor = Color.Red;
@@ -48,13 +50,66 @@ namespace nChip16
             tbPC.Tag = 16;
             tbSP.Tag = 17;
 
-            // is a single parameters used? Then this is a Chip16 file to load at startup
+            // is a single parameter used? Then this is a Chip16 file to load at startup
             if (args.Length == 2)
                 FileDropped = args[1];
 
             vm.Memory.OnWriteByte += Memory_OnWriteByte;
             vm.Memory.OnWriteWord += Memory_OnWriteWord;
             LoadAndRestart();
+
+            var filterDropDown = PopulateInterpolationDropDown();
+            fullScreenFilterToolStripMenuItem.DropDown = filterDropDown;
+        }
+
+        private ToolStripDropDown PopulateInterpolationDropDown()
+        {
+            var dropdown = new ToolStripDropDown();
+
+            dropdown.Items.Add(BuildMenuItem(InterpolationMode.Bicubic/*, Keys.F6*/));
+            dropdown.Items.Add(BuildMenuItem(InterpolationMode.Bilinear/*, Keys.F7*/));
+            dropdown.Items.Add(BuildMenuItem(InterpolationMode.High/*, Keys.F8*/));
+            dropdown.Items.Add(BuildMenuItem(InterpolationMode.HighQualityBicubic/*, Keys.F9*/));
+            dropdown.Items.Add(BuildMenuItem(InterpolationMode.HighQualityBilinear/*, Keys.F10*/));
+            dropdown.Items.Add(BuildMenuItem(InterpolationMode.Low/*, Keys.F11*/));
+
+            pbEmuScreen.InterpolationMode = InterpolationMode.NearestNeighbor;
+            var nnItem = BuildMenuItem(InterpolationMode.NearestNeighbor/*,Keys.F12*/);
+            nnItem.Font = new Font(nnItem.Font,FontStyle.Bold);
+            dropdown.Items.Add(nnItem);
+            dropdown.ItemClicked += dropdown_ItemClicked;
+            return dropdown;
+        }
+
+        private static ToolStripMenuItem BuildMenuItem(InterpolationMode filter/*, Keys shortCutKey*/)
+        {
+            var item = new ToolStripMenuItem(filter.ToString());
+            item.Tag = filter;
+            //item.Checked = true;
+            //item.CheckState = CheckState.Checked;
+            //item.ShortcutKeys = shortCutKey;
+            //item.ShortcutKeyDisplayString = "bla bla";
+            item.ShowShortcutKeys = true;
+            return item;
+
+        }
+        
+        /// <summary>
+        /// Changed selected filtering algorithm
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void dropdown_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            var clickedTsmi = (ToolStripMenuItem) e.ClickedItem;
+            // remove all checked
+            foreach (ToolStripMenuItem item in fullScreenFilterToolStripMenuItem.DropDown.Items)
+                item.Font = new Font(item.Font, FontStyle.Regular);
+
+            //clickedTsmi.Checked = true;
+            var selectedFiltering = (InterpolationMode)clickedTsmi.Tag;
+            clickedTsmi.Font = new Font(clickedTsmi.Font, FontStyle.Bold);
+            pbEmuScreen.InterpolationMode = selectedFiltering;
         }
 
         //maybe we dont need this, but instead can reread all watches 
@@ -310,6 +365,10 @@ namespace nChip16
                 case JoystickMoves.B:
                     shiftSteps = 7;
                     break;
+                case JoystickMoves.NotMapped:
+                    shiftSteps = 0;
+                    bitValue = 0;
+                    break;
             }
 
             if (bitValue != 0)
@@ -434,7 +493,10 @@ namespace nChip16
         {
             UpdateScreen();
             UpdateRegisterFields();
-            UpdateSourceTextBox((uint)endOfProgram); // use romsize as limit for source rendering if 0
+
+            if(tsmiShowSourceListing.Checked)
+                UpdateSourceTextBox((uint)endOfProgram); // use romsize as limit for source rendering if 0
+            
             hexEdit1.RenewVisibleValues();
             UpdateWatchValues();
         }
@@ -464,63 +526,83 @@ namespace nChip16
 
         private void LoadAndRestart()
         {
-             // first make full reset of vm
-            vm.Reset();
+            var waitForm = new WaitForm();
 
-            // then load and start program
-            if (!string.IsNullOrEmpty(FileDropped))
-                vm.LoadProgram(FileDropped);
-
-            // after program has loaded, maybe labels have been updated. 
-            // Update watches that use LockTo: Label
-            if(vm.UsingLineLabels && (Watches.Count > 0))
+            try
             {
-                var lockToLabelWatches = Watches.Where(w => w.LockTo == LockTo.Label);
+                //waitForm.ShowDialog(this);
+                Cursor = Cursors.WaitCursor;
+                // first make full reset of vm
+                vm.Reset();
 
-                foreach (var watch in lockToLabelWatches)
+                // then load and start program
+                if (!string.IsNullOrEmpty(FileDropped))
+                    vm.LoadProgram(FileDropped);
+
+                hexEdit1.SetData(vm.Memory.GetInternalMemoryArray(), 0);
+
+                // after program has loaded, maybe labels have been updated. 
+                // Update watches that use LockTo: Label
+                if (vm.UsingLineLabels && (Watches.Count > 0))
                 {
-                    var watchName = watch.Name;
-                    var matchedLabels = vm.Labels.FindAll(l => l.Name == watchName);
-                    if(matchedLabels.Count != 1)
-                        continue;
+                    var lockToLabelWatches = Watches.Where(w => w.LockTo == LockTo.Label);
 
-                    watch.Address = matchedLabels[0].Address;
+                    foreach (var watch in lockToLabelWatches)
+                    {
+                        var watchName = watch.Name;
+                        var matchedLabels = vm.Labels.FindAll(l => l.Name == watchName);
+                        if (matchedLabels.Count != 1)
+                            continue;
+
+                        watch.Address = matchedLabels[0].Address;
+                    }
+                    // redraw lvWatches
+                    RedrawWatches();
                 }
-                // redraw lvWatches
-                RedrawWatches();
+
+                // update rom info
+                if (vm.currentFileStructure != null)
+                {
+                    tsslRomName.Text = Path.GetFileName(vm.currentFileStructure.Path);
+                    tsslInitialPC.Text = "0x" + Utils.UShortToHex16BitFormat(vm.currentFileStructure.StartAddress);
+                    tsslRomSize.Text = (vm.currentFileStructure.RomSize + 16).ToString() + " bytes";
+                        // 16 bytes header size
+                    tsslSpecVersion.Text = vm.currentFileStructure.SpecVersionString;
+                }
+
+                if (vm.currentFileStructure != null)
+                    endOfProgram = (int) (vm.currentFileStructure.RomSize/Chip16VM.InstructionSize);
+
+                if (vm.UsingLineLabels)
+                {
+                    // if label EndOfProgram is found, use this to further minimize source listing
+                    var endOfProgramLabel = vm.Labels.FindAll(l => l.Name == "EndOfProgram");
+
+                    if (endOfProgramLabel.Count == 1)
+                        endOfProgram = endOfProgramLabel[0].Address/Chip16VM.InstructionSize;
+                }
+
+                // update starting source code
+                if (tsmiShowSourceListing.Checked) //skip all
+                    UpdateAllControls();
+
+                if (autostartToolStripMenuItem.Checked)
+                {
+                    emuTimer.Enabled = true;
+                    Running = true;
+                    vm.CurrentState = RunningState.Running;
+                }
+
             }
-
-            // update rom info
-            if(vm.currentFileStructure != null)
+            catch (Exception)
             {
-                tsslRomName.Text = Path.GetFileName(vm.currentFileStructure.Path);
-                tsslInitialPC.Text = "0x" + Utils.UShortToHex16BitFormat(vm.currentFileStructure.StartAddress);
-                tsslRomSize.Text = (vm.currentFileStructure.RomSize +16).ToString() + " bytes"; // 16 bytes header size
-                tsslSpecVersion.Text = vm.currentFileStructure.SpecVersionString;
+                throw;
             }
-
-            hexEdit1.SetData(vm.Memory.GetInternalMemoryArray(), 0);
-
-            if(vm.currentFileStructure != null)
-                endOfProgram = (int)(vm.currentFileStructure.RomSize/Chip16VM.InstructionSize);
-            
-            if (vm.UsingLineLabels)
+            finally
             {
-                // if label EndOfProgram is found, use this to further minimize source listing
-                var endOfProgramLabel = vm.Labels.FindAll(l => l.Name == "EndOfProgram");
-
-                if (endOfProgramLabel.Count == 1)
-                    endOfProgram = endOfProgramLabel[0].Address/Chip16VM.InstructionSize;
-            }
-
-            // update starting source code
-            UpdateAllControls();
-
-            if (AutoStart)
-            {
-                emuTimer.Enabled = true;
-                Running = true;
-                vm.CurrentState = RunningState.Running;
+                //waitForm.Close();
+                Cursor = Cursors.Default;
+                
             }
         }
 
@@ -594,7 +676,6 @@ namespace nChip16
 
             Running = false; // to disable graphics update while performing StepOver
             vm.ExecuteStepOver();
-            Running = false;
             UpdateAllControls();
         }
 
@@ -638,12 +719,17 @@ namespace nChip16
             tbSource.Select(tbSource.GetFirstCharIndexFromLine(selectedLine),0);
         }
 
-        public void MarkWithHighlight(RichTextBox rtbSource, ushort value)
+        public void MarkWithHighlight(RichTextBox rtbSource, ushort address)
         {
-            rtbSource.Focus();
-            var currentLine = value / 4;
+            var currentLine = address / 4;
+
+            if (!rtbSource.Lines.Any() || (currentLine > rtbSource.Lines.Count()))
+                return;
+
             var startIndex = rtbSource.GetFirstCharIndexFromLine(currentLine);
             var length = rtbSource.Lines[currentLine].Length;
+
+            rtbSource.Focus();
 
             // Mark current PC
             rtbSource.Select(startIndex, length);
@@ -656,7 +742,7 @@ namespace nChip16
             rtbSource.SelectionBackColor = backColor;
             //rtbSource.ScrollToCaret();  
             //TODO: Fix so that this only scrolls if target is off-screen. 
-            //ScrollToMakeLineVisible(rtbSource, currentLine);
+            ScrollToMakeLineVisible(rtbSource, currentLine);
             rtbSource.Select(0,0); 
         }
 
@@ -680,15 +766,23 @@ namespace nChip16
             int lastIndex = textBox.GetCharIndexFromPosition(pos);
             int lastLine = textBox.GetLineFromCharIndex(lastIndex);
 
-            if (scrollToLine >= firstLine && scrollToLine <= lastLine)
+            if ((scrollToLine >= firstLine) && (scrollToLine <= lastLine))
                 return; // line already visible
 
-            MessageBox.Show("Line not visible");
+            // try to set scrollToLine in the middle of the screen
+            var visibleLineSpan = lastLine - firstLine;
+            
+            //MessageBox.Show("Line not visible");
         }
 
         private void RemovePcHighlight()
         {
             var currentLine = vm.PC / Chip16VM.InstructionSize;
+
+            // do not remove high-light from lines missing
+            if (!tbSource.Lines.Any() || (currentLine > tbSource.Lines.Count()))
+                return;
+
             var startIndex = tbSource.GetFirstCharIndexFromLine(currentLine);
             var length = tbSource.Lines[currentLine].Length;
 
@@ -705,7 +799,9 @@ namespace nChip16
 
         private void SetBackgroundColorOfLine(int lineIndex, Color backgroundColor)
         {
-            //var currentLine = vm.PC / 4;
+            if (lineIndex > tbSource.Lines.Count())
+                return;
+
             var startIndex = tbSource.GetFirstCharIndexFromLine(lineIndex);
             var length = tbSource.Lines[lineIndex].Length;
 
@@ -765,13 +861,17 @@ namespace nChip16
                 // set new state
                 FormBorderStyle = FormBorderStyle.None;
                 WindowState = FormWindowState.Maximized;
+                
                 gbRegisters.Visible = false;
                 gbControls.Visible = false;
                 gbWatches.Visible = false;
-                statusStrip1.Visible = false;
-                groupBox1.Visible = false;
-                groupBox3.Visible = false;
+                gbFlags.Visible = false;
+                gbMemory.Visible = false;
                 gbSource.Visible = false;
+                WasPanel2Collapsed = splitContainer1.Panel2Collapsed;
+                splitContainer1.Panel2Collapsed = true;
+
+                statusStrip1.Visible = false;
                 mainMenu.Visible = false;
 
                 BackColor = Color.Black;
@@ -801,10 +901,11 @@ namespace nChip16
                 gbControls.Visible = true;
                 gbWatches.Visible = true;
                 statusStrip1.Visible = true;
-                groupBox1.Visible = true;
-                groupBox3.Visible = true;
+                gbFlags.Visible = true;
+                gbMemory.Visible = true;
                 gbSource.Visible = true;
                 mainMenu.Visible = true;
+                splitContainer1.Panel2Collapsed = WasPanel2Collapsed;
 
                 FullScreen = false;
             }
@@ -846,22 +947,6 @@ namespace nChip16
 
             cmsWatchesMenu.Items[1].Enabled = hasSelected;
             cmsWatchesMenu.Items[2].Enabled = hasSelected;
-
-            //if (e.Button == MouseButtons.Right)
-            {
-                /*
-                var mousePostionInSource = lvWatches.PointToClient(Cursor.Position);
-                //var lineUnderMouseCursor = lvWatches.GetLineFromCharIndex(tbSource.GetCharIndexFromPosition(mousePostionInSource));
-                
-                // set enable mode for all alternatives before showing menu
-                bool hasSelected = lvWatches.SelectedItems.Count != 0;
-
-                cmsWatchesMenu.Items[1].Enabled = hasSelected;
-                cmsWatchesMenu.Items[2].Enabled = hasSelected;
- 
-                cmsWatchesMenu.Show(lvWatches, mousePostionInSource);
-                 * */
-            }
         }
         
 
@@ -948,10 +1033,10 @@ namespace nChip16
             watchForm.Text = "Edit Watch";
             var result = watchForm.ShowDialog(lvWatches);
 
-            UpdateListViewItemWithWatch(lvi);
-
             if (result != DialogResult.OK)
                 return;
+
+            UpdateListViewItemWithWatch(lvi);
         }
 
         private void deleteWatchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -986,12 +1071,22 @@ namespace nChip16
 
         private void tmsiWaitForVBLANK_Click(object sender, EventArgs e)
         {
-            tmsiWaitForVBLANK.Checked = !tmsiWaitForVBLANK.Checked;
         }
 
         private void slowTimer_Tick(object sender, EventArgs e)
         {
             UpdateSlowGraphics();
+        }
+
+        /// <summary>
+        /// When Checkbox is enabled, the source listing is shown and used when debugging.
+        /// Is shows breakpoints and full assembler listing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void showSourceListingToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            splitContainer1.Panel2Collapsed = !tsmiShowSourceListing.Checked;
         }
     }
 }

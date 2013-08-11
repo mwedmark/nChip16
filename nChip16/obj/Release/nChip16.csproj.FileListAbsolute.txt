@@ -10,3 +10,4 @@ C:\Projects\nChip16\nChip16\bin\Release\MWHexEdit.dll
 C:\Projects\nChip16\nChip16\bin\Release\MWHexEdit.pdb
 C:\Projects\nChip16\nChip16\obj\Release\nChip16.csprojResolveAssemblyReference.cache
 C:\Projects\nChip16\nChip16\obj\Release\nChip16.WatchForm.resources
+C:\Projects\nChip16\nChip16\obj\Release\nChip16.WaitForm.resources
