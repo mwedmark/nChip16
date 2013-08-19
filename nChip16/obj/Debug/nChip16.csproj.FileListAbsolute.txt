@@ -10,3 +10,4 @@ C:\Projects\nChip16\nChip16\obj\Debug\nChip16.csprojResolveAssemblyReference.cac
 C:\Projects\nChip16\nChip16\bin\Debug\MWHexEdit.dll
 C:\Projects\nChip16\nChip16\bin\Debug\MWHexEdit.pdb
 C:\Projects\nChip16\nChip16\obj\Debug\nChip16.WatchForm.resources
+C:\Projects\nChip16\nChip16\obj\Debug\nChip16.WaitForm.resources

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>C:\Share\Chip16\tchip16_1.4.5\output.c16</StartArguments>
+    <StartArguments>C:\Share\Chip16\tchip16_1.4.5\ShowCompImage.c16</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <StartArguments>C:\Share\Chip16\tchip16_1.4.5\ShowImage.c16</StartArguments>
