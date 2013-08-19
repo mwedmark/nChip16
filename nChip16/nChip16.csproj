@@ -48,7 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfoHelper.cs" />
+    <Compile Include="Chip16Framebuffer.cs" />
     <Compile Include="Chip16VM.cs" />
+    <Compile Include="CRC32.cs" />
     <Compile Include="FileStructure.cs" />
     <Compile Include="FlagRegister.cs" />
     <Compile Include="FlipMode.cs" />

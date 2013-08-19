@@ -249,13 +249,15 @@ namespace nChip16
 
         private void UpdateSourceTextBox(uint lastSourceLine)
         {
-            if (vm != null && vm.currentFileStructure != null)
+            if (vm != null && vm.CurrentFileStructure != null)
             {
                 var endOfSource = (lastSourceLine+1)*Chip16VM.InstructionSize;
                 vm.RenderOpcodes(tbSource, endOfSource);
-                
+
                 if(vm.CurrentState != RunningState.Running)
                     MarkWithHighlight(tbSource, vm.PC);
+
+                //TODO: make sure the PC in seen on-screen
             }
         }
 
@@ -460,18 +462,18 @@ namespace nChip16
 
         private void ExecuteFrame()
         {
-            //var vmState = newFrameEvent();
             Chip16Usage = vm.ExecuteFrame();
-            
+
+            if (Chip16Usage == -1)
+                return;
+
             // update graphics and sound via buffer pointers
-            //BuildGraphics(0);
             UpdateScreen();
 
             // check running flag for breakpoint
             if (vm.CurrentState == RunningState.Paused)
             {
                 // we've hit a breakpoint, pause, then stop timer and set mode to Paused
-                //InvokeOnClick(btnRun, null);
                 ToggleRunState();
             }
         }
@@ -479,12 +481,16 @@ namespace nChip16
         private void UpdateSlowGraphics()
         {
             tsslChip16Usage.Text =
-                string.Format("[{0}/{1}] {2}%", Chip16Usage, Chip16VM.instructionsPerFrame,
-                              (int)(Chip16Usage * 100.0 / Chip16VM.instructionsPerFrame)); 
+                string.Format("[{0}/{1}] {2}%", Chip16Usage, Chip16VM.InstructionsPerFrame,
+                              (int)(Chip16Usage * 100.0 / Chip16VM.InstructionsPerFrame)); 
+
+            UpdateInstructionCount();
         }
 
         private void UpdateScreen()
         {
+            // first give command to vm to redraw from internal Chip16 frambuffer
+            vm.UpdateScreenFromFramebuffer();
             pbEmuScreen.Invalidate();
             pbEmuScreen.Refresh();
         }
@@ -499,6 +505,12 @@ namespace nChip16
             
             hexEdit1.RenewVisibleValues();
             UpdateWatchValues();
+            UpdateInstructionCount();
+        }
+
+        private void UpdateInstructionCount()
+        {
+            tsslInstructionCount.Text = vm.InstructionCount.ToString();
         }
 
         private void UpdateWatchValues()
@@ -534,7 +546,7 @@ namespace nChip16
                 Cursor = Cursors.WaitCursor;
                 // first make full reset of vm
                 vm.Reset();
-
+                UpdateAllControls();
                 // then load and start program
                 if (!string.IsNullOrEmpty(FileDropped))
                     vm.LoadProgram(FileDropped);
@@ -561,17 +573,17 @@ namespace nChip16
                 }
 
                 // update rom info
-                if (vm.currentFileStructure != null)
+                if (vm.CurrentFileStructure != null)
                 {
-                    tsslRomName.Text = Path.GetFileName(vm.currentFileStructure.Path);
-                    tsslInitialPC.Text = "0x" + Utils.UShortToHex16BitFormat(vm.currentFileStructure.StartAddress);
-                    tsslRomSize.Text = (vm.currentFileStructure.RomSize + 16).ToString() + " bytes";
+                    tsslRomName.Text = Path.GetFileName(vm.CurrentFileStructure.Path);
+                    tsslInitialPC.Text = "0x" + Utils.UShortToHex16BitFormat(vm.CurrentFileStructure.StartAddress);
+                    tsslRomSize.Text = (vm.CurrentFileStructure.RomSize + 16).ToString() + " bytes";
                         // 16 bytes header size
-                    tsslSpecVersion.Text = vm.currentFileStructure.SpecVersionString;
+                    tsslSpecVersion.Text = vm.CurrentFileStructure.SpecVersionString;
                 }
 
-                if (vm.currentFileStructure != null)
-                    endOfProgram = (int) (vm.currentFileStructure.RomSize/Chip16VM.InstructionSize);
+                if (vm.CurrentFileStructure != null)
+                    endOfProgram = (int) (vm.CurrentFileStructure.RomSize/Chip16VM.InstructionSize);
 
                 if (vm.UsingLineLabels)
                 {
@@ -643,7 +655,7 @@ namespace nChip16
                 btnRun.Text = "Stop (F5)";
                 Running = true;
                 emuTimer.Enabled = true;
-                vm.CurrentState = RunningState.Running;
+                vm.CurrentState = RunningState.Started;
                 
             }
             else
@@ -743,7 +755,7 @@ namespace nChip16
             //rtbSource.ScrollToCaret();  
             //TODO: Fix so that this only scrolls if target is off-screen. 
             ScrollToMakeLineVisible(rtbSource, currentLine);
-            rtbSource.Select(0,0); 
+            rtbSource.Select(startIndex, 0); 
         }
 
         /// <summary>
@@ -1088,5 +1100,12 @@ namespace nChip16
         {
             splitContainer1.Panel2Collapsed = !tsmiShowSourceListing.Checked;
         }
+
+        private void resetInstructionCounterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            vm.ResetInstructionCount();
+            UpdateInstructionCount();
+        }
+
     }
 }

@@ -11,18 +11,24 @@ namespace nChip16
 {
     public delegate void ChangedValueHandler(ushort oldValue, ushort newValue);
 
-    public enum RunningState { Running, Paused };
+    public enum RunningState { Started, Running, Paused };
 
     public class Chip16VM
     {
         public const int InstructionSize = 4;
-        public const int instructionsPerFrame = 1000000/60;
-        private const int initStackAddress = 0xFDF0; // Start of stack (512 bytes total size, 128 addresses depth).
+        public const int InstructionsPerFrame = 1000000/60;
+        private const int InitStackAddress = 0xFDF0; // Start of stack (512 bytes total size, 128 addresses depth).
         private readonly Random rnd = new Random((int)DateTime.Now.Ticks);
+
+        private List<Color> CurrentPalette = new List<Color>();
+        private ushort lastPaletteAddress = 0;
+
         private ushort bgc = 0;
         private FlipMode FlipMode = FlipMode.None;
 
-        public FileStructure currentFileStructure;
+        public int InstructionCount = 0;
+
+        public FileStructure CurrentFileStructure;
         public List<LineLabel> Labels = new List<LineLabel>();
         private List<ushort> Breakpoints = new List<ushort>();
  
@@ -34,6 +40,7 @@ namespace nChip16
 
         public RunningState CurrentState = RunningState.Paused;
 
+        public Chip16Framebuffer FrameBuffer = new Chip16Framebuffer();
         //1x 16 bit program counter (PC)
         private ushort pc;
         public ushort PC 
@@ -94,6 +101,11 @@ namespace nChip16
             return !foundBreakpoint; // return the new state, false=>Breakpoint removed
         }
 
+        public void ResetInstructionCount()
+        {
+            InstructionCount = 0;
+        }
+
         public bool BreakpointAtCurrentPc()
         {
             return Breakpoints.Contains(PC);
@@ -105,7 +117,7 @@ namespace nChip16
             Labels.Clear();
 
             PC = 0;
-            SP = initStackAddress;
+            SP = InitStackAddress;
 
             // set all registers to 0
             for(int i=0;i<Regs.Length;i++)
@@ -115,6 +127,8 @@ namespace nChip16
             Memory.Reset();
             // set all Flags to 0
             Flags.Reset();
+
+            ResetInstructionCount();
 
             // Graphics Reset
             // ------------------
@@ -129,20 +143,29 @@ namespace nChip16
         internal void LoadProgram(string programPath)
         {
             // start by interpret the complete file
-            currentFileStructure = InterpretFile(programPath);
+            CurrentFileStructure = InterpretFile(programPath);
 
-            if (Encoding.UTF8.GetString(currentFileStructure.MagicNumber) != "CH16")
+            if (Encoding.UTF8.GetString(CurrentFileStructure.MagicNumber) != "CH16")
                 throw new Exception("Magic number is incorrect!");
 
             // load program into address 0 in memory
-            for (int index = 0; index < currentFileStructure.RomSize; index++)
+            for (int index = 0; index < CurrentFileStructure.RomSize; index++)
             {
-                var dataByte = currentFileStructure.Romdata[index];
+                var dataByte = CurrentFileStructure.Romdata[index];
                 Memory.WriteByte(index, dataByte);
             }
 
+            // CRC32 checksum of ROM (excluding header) (polynomial: 0x04C11DB7)
+            //var crc32 = new CRC32(0x04C11DB7); // poly given via docs for Chip16
+            //var calculatedChecksum = crc32.ComputeHash(currentFileStructure.Romdata);
+
+            //if (calculatedChecksum != currentFileStructure.Checksum)
+            {
+            // Show Error message
+            }
+
             // set starting PC correct
-            PC = currentFileStructure.StartAddress;
+            PC = CurrentFileStructure.StartAddress;
 
             // try and find the mmap.txt file in the same directory and read it
             var mmapFullPath = Path.GetDirectoryName(programPath) + "\\mmap.txt";
@@ -162,21 +185,36 @@ namespace nChip16
         {
             UpdateKeyboardState();
 
-            for (int i = 0; i < instructionsPerFrame; i++)
+            // update palette from memory once for each frame
+            SetPalette(lastPaletteAddress);
+
+            for (int i = 0; i < InstructionsPerFrame; i++)
             {
                 InstructionsPerVBlank++;
                 //TODO: DO other check to be able to RUN rounds between a single brekpoint
-                if (Breakpoints.Contains(PC) /*&& (i != 0)*/) // i!=0 added to disregard first breakpoint if we started there
+                if (Breakpoints.Contains(PC) && CurrentState != RunningState.Started /*&& (i != 0)*/) // i!=0 added to disregard first breakpoint if we started there
                 {
                     CurrentState = RunningState.Paused;
                     return 0;
                 }
+                try
+                {
+                if(CurrentState == RunningState.Started) // just started. State used to skip initial breakpoint
+                    CurrentState = RunningState.Running;
+                
                 if (ExecuteInstruction())
                 {
                     var temp = InstructionsPerVBlank;
                     InstructionsPerVBlank = 0;
                     // Found VBLNK, present num of Chip16 instructions as usage
                     return temp; // found infinitive loop, break current frame and wait for next frame
+                }
+                InstructionCount++; // only count instructions that isn't an infintive loop
+                }
+                catch (Exception)
+                {
+                    return -1;
+
                 }
             }
             return InstructionsPerVBlank;
@@ -225,8 +263,6 @@ namespace nChip16
             if (!firstOpcode.IsCallInstruction())
                 return;
 
-            
-
             //if current instruction is a CALL, execute until returning from call
             while(true)
             {
@@ -245,8 +281,9 @@ namespace nChip16
             if (Screen == null || Screen.Bitmap == null)
                 return;
             // FILL WITH BG COLOR!
-            var graphics = Graphics.FromImage(Screen.Bitmap);
-            graphics.Clear(ColorLookup((byte)bgc));
+            //var graphics = Graphics.FromImage(Screen.Bitmap);
+            //graphics.Clear(ColorLookup((byte)bgc));
+            FrameBuffer.ClearBuffer(bgc);
         }
 
         private bool ExecuteCode(Opcode opcode)
@@ -306,10 +343,16 @@ namespace nChip16
                                 if (xCoord < 0 || xCoord > 319)
                                     continue;
 
-                                if (!IsBackgroundColor(Screen.GetPixel(xCoord, yCoord)))
+                                //if (!IsBackgroundColor(Screen.GetPixel(xCoord, yCoord)))
+                                if (!IsBackgroundIndex(FrameBuffer.GetPixel(xCoord, yCoord)))
                                     Flags.C = true;
 
-                                Screen.SetPixel(xCoord, yCoord, color1.A, color1.R, color1.G, color1.B);
+                                //Screen.SetPixel(xCoord, yCoord, color1.A, color1.R, color1.G, color1.B);
+                                FrameBuffer.SetPixel(xCoord,yCoord,colorIndex1);
+                            }
+                            else // writing index0, which never covers others pixels, for now do nothing
+                            {
+                                
                             }
 
                             if (colorIndex2 != 0)
@@ -326,10 +369,16 @@ namespace nChip16
                                 if (xCoord < 0 || xCoord > 319)
                                     continue;
 
-                                if (!IsBackgroundColor(Screen.GetPixel(xCoord, yCoord)))
+                                //if (!IsBackgroundColor(Screen.GetPixel(xCoord, yCoord)))
+                                if (!IsBackgroundIndex(FrameBuffer.GetPixel(xCoord, yCoord)))
                                     Flags.C = true;
 
-                                Screen.SetPixel(xCoord, yCoord, color2.A, color2.R, color2.G, color2.B);
+                                //Screen.SetPixel(xCoord, yCoord, color2.A, color2.R, color2.G, color2.B);
+                                FrameBuffer.SetPixel(xCoord, yCoord, colorIndex2);
+                            }
+                            else // writing index0, which never covers others pixels, for now do nothing
+                            {
+
                             }
                         }
                     }
@@ -372,10 +421,12 @@ namespace nChip16
                                     if (xCoord < 0 || xCoord > 319)
                                         continue;
                                     var color1 = ColorLookup(pixel);
-                                    if (!IsBackgroundColor(Screen.GetPixel(xCoord, yCoord)))
-                                        Flags.C = true;
+                                    //if (!IsBackgroundColor(Screen.GetPixel(xCoord, yCoord)))
+                                    if (!IsBackgroundIndex(FrameBuffer.GetPixel(xCoord, yCoord))) 
+                                            Flags.C = true;
 
-                                    Screen.SetPixel(xCoord, yCoord, color1.A, color1.R, color1.G, color1.B);
+                                    //Screen.SetPixel(xCoord, yCoord, color1.A, color1.R, color1.G, color1.B);
+                                    FrameBuffer.SetPixel(xCoord, yCoord, pixel);
                                 }
                             }
                         }
@@ -670,16 +721,41 @@ namespace nChip16
             return false;
         }
 
+        public void UpdateScreenFromFramebuffer()
+        {
+            SetPalette(lastPaletteAddress);
+            if (Screen == null)
+                return;
+
+            for (int y = 0; y < Chip16Framebuffer.Ymax; y++)
+            {
+                for (int x = 0; x < Chip16Framebuffer.Xmax; x++)
+                {
+                    var colorIndex = FrameBuffer.GetPixel(x, y);
+                    var color = ColorLookup(colorIndex);
+
+                    Screen.SetPixel(x,y,color.A,color.R,color.G,color.B);
+                }
+            }
+        }
+
         private void SetPalette(ushort HHLL)
         {
-            int baseAddress = HHLL;
+            lastPaletteAddress = HHLL;
             for (int ci = 0; ci < 16; ci++)
             {
-                int R = Memory.ReadByte(baseAddress + (3*ci));
-                int G = Memory.ReadByte(baseAddress+1 + (3*ci));
-                int B = Memory.ReadByte(baseAddress+2 + (3*ci));
+                int R = Memory.ReadByte(lastPaletteAddress + (3 * ci));
+                int G = Memory.ReadByte(lastPaletteAddress + 1 + (3 * ci));
+                int B = Memory.ReadByte(lastPaletteAddress + 2 + (3 * ci));
                 CurrentPalette[ci] = Color.FromArgb(R, G, B);
             }
+            
+            //ClearScreen(); // TODO: temporary fix to be able to use index0 in images correctly
+        }
+
+        private bool IsBackgroundIndex(ushort index)
+        {
+            return bgc == index;
         }
 
         private bool IsBackgroundColor(Color color)
@@ -720,8 +796,6 @@ namespace nChip16
         {
             return CurrentPalette[colorIndex];
         }
-
-        private List<Color> CurrentPalette = new List<Color>();
 
         private readonly List<Color> InitPalette = new List<Color> 
         {
@@ -870,8 +944,8 @@ namespace nChip16
             tbSource.Clear();
             var startAddress = 0;
             
-            if(currentFileStructure != null)
-                startAddress = currentFileStructure.StartAddress;
+            if(CurrentFileStructure != null)
+                startAddress = CurrentFileStructure.StartAddress;
 
             //const int rowCount = romSize;
             for (int i = 0; i < romSize; i += InstructionSize)
