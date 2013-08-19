@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Bmp16ToBin/bin/Debug/Bmp16ToBin.exe
+/Bmp16ToBin/bin/Debug/Bmp16ToBin.exe.config
+/Bmp16ToBin/bin/Debug/Bmp16ToBin.pdb
+/Bmp16ToBin/bin/Debug/Bmp16ToBin.vshost.exe
+/Bmp16ToBin/bin/Debug/Bmp16ToBin.vshost.exe.config
+/Bmp16ToBin/bin/Release/Bmp16ToBin.exe
+/Bmp16ToBin/bin/Release/Bmp16ToBin.exe.config
+/Bmp16ToBin/bin/Release/Bmp16ToBin.pdb
+/Bmp16ToBin/bin/Release/Bmp16ToBin.vshost.exe
+/Bmp16ToBin/bin/Release/Bmp16ToBin.vshost.exe.config
+/Bmp16ToBin/bin/Release/Bmp16ToBin.vshost.exe.manifest
