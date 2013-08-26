@@ -2,18 +2,21 @@ nChip16
 =======
 
 Chip16 emulator written in C# and for Windows. Visual Studio 2012 project files included. 
+
 NOTE: You need to install .NET Framework 4.5 before running nChip16.
 
 Bmp16ToBin
 ==========
 
 Takes a 24-bit uncompresssed BMP-picture with only 16 different colors and makes a Chip16 Compatible picture .bin file with indexed colors.
+
 NOTE: You need to install .NET Framework 4.5 before running Bmp16ToBin.
 
 ImageCompression
 ================
 
 Different classes/methods used to compress .BIN-file created with the above Bmp16ToBin executable.
+
 NOTE: You need to install .NET Framework 4.5 before running ImageCompression.
 
 The complete tool-chain for getting nice pictures on the Chip16 platform is:
