@@ -27,6 +27,9 @@ The complete tool-chain for getting nice pictures on the Chip16 platform is:
 - Bmp16ToBin
 - ImageCompression
 
+Description of how to use Bmp16ToBon and ImageCompression
+=========================================================
+
 - Find some good pictures and load them into Paint.NET. 
 - Scale the picture to 320*240 for a full-screen Chip16 picture.
 - Do filtering such as Auto-level or maybe Black-and-White by using Adjustments in Paint.NET. 
