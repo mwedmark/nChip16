@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace nChip16
@@ -15,6 +14,7 @@ namespace nChip16
 
     public class Chip16VM
     {
+        public const byte SpecVersion = ((1 << 4) + 3); //1.3
         public const int InstructionSize = 4;
         public const int InstructionsPerFrame = 1000000/60;
         private const int InitStackAddress = 0xFDF0; // Start of stack (512 bytes total size, 128 addresses depth).
@@ -33,6 +33,8 @@ namespace nChip16
         private List<ushort> Breakpoints = new List<ushort>();
  
         public bool UsingLineLabels { get; set; }
+
+        public string ErrorMessage;
 
         // delegates and events
         public delegate uint dGetKeyboardState();
@@ -167,8 +169,10 @@ namespace nChip16
             // set starting PC correct
             PC = CurrentFileStructure.StartAddress;
 
-            // try and find the mmap.txt file in the same directory and read it
-            var mmapFullPath = Path.GetDirectoryName(programPath) + "\\mmap.txt";
+            // try and find the xxx.txt file in the same directory (where xxx is the program name) and read it
+            var mmapFullPath = Path.GetDirectoryName(programPath) + "\\" +
+                Path.GetFileNameWithoutExtension(programPath) + ".txt";
+
             if (File.Exists(mmapFullPath))
             {
                 Labels = MMapImport.ImportFile(mmapFullPath);
@@ -192,10 +196,20 @@ namespace nChip16
             {
                 InstructionsPerVBlank++;
                 //TODO: DO other check to be able to RUN rounds between a single brekpoint
-                if (Breakpoints.Contains(PC) && CurrentState != RunningState.Started /*&& (i != 0)*/) // i!=0 added to disregard first breakpoint if we started there
+                if ((Breakpoints.Contains(PC) && CurrentState != RunningState.Started))
                 {
                     CurrentState = RunningState.Paused;
                     return 0;
+                }
+                if (CurrentState == RunningState.Paused)
+                {
+                    // check error code for crash
+                    if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        //MessageBox.Show(ErrorMessage);
+                        //ErrorMessage = "";
+                        return 0;
+                    }
                 }
                 try
                 {
@@ -211,10 +225,12 @@ namespace nChip16
                 }
                 InstructionCount++; // only count instructions that isn't an infintive loop
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return -1;
-
+                    //MessageBox.Show(e.Message);
+                    //return -1;
+                    //throw;
+                    return 0;
                 }
             }
             return InstructionsPerVBlank;
@@ -242,11 +258,17 @@ namespace nChip16
             }
             catch (Exception e)
             {
+                /*
                 MessageBox.Show(
                     string.Format("Error in instruction: xxxx - {0}", e.Message), "CHIP16 ERROR", 
-                    MessageBoxButtons.OK,MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBoxButtons.OK,MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);*/
                 // here we would like to set the machine in Pause and stop on trouble instruction..
-                throw;
+                ErrorMessage = e.Message;
+                CurrentState = RunningState.Paused;
+                //throw new Exception(
+                //    string.Format("Error in instruction: xxxx - {0}", e.Message));
+                //MessageBox.Show("Error in instruction: xxxx - {0}", e.Message);
+                return false;
             }
         }
 
@@ -280,9 +302,7 @@ namespace nChip16
         {
             if (Screen == null || Screen.Bitmap == null)
                 return;
-            // FILL WITH BG COLOR!
-            //var graphics = Graphics.FromImage(Screen.Bitmap);
-            //graphics.Clear(ColorLookup((byte)bgc));
+            
             FrameBuffer.ClearBuffer(bgc);
         }
 
@@ -322,9 +342,9 @@ namespace nChip16
 
                             var yCoord = 0;
                             if (FlipMode == FlipMode.None)
-                                yCoord = Regs[opcode.Y] + y;
+                                yCoord = (short)Regs[opcode.Y] + y;
                             else if (FlipMode == FlipMode.VFlip || FlipMode == FlipMode.VFlipHFlip)
-                                yCoord = Regs[opcode.Y] + SpriteSize.Height - y;
+                                yCoord = (short)Regs[opcode.Y] + SpriteSize.Height - y;
 
                             if (yCoord < 0 || yCoord > 239)
                                 continue;
@@ -335,9 +355,9 @@ namespace nChip16
                                 //var xCoord = Regs[opcode.X] + x;
                                 var xCoord = 0;
                                 if (FlipMode == FlipMode.None)
-                                    xCoord = Regs[opcode.X] + x;
+                                    xCoord = (short)Regs[opcode.X] + x;
                                 else if (FlipMode == FlipMode.HFlip || FlipMode == FlipMode.VFlipHFlip)
-                                    xCoord = Regs[opcode.X] + SpriteSize.Width - x;
+                                    xCoord = (short)Regs[opcode.X] + SpriteSize.Width - x;
 
 
                                 if (xCoord < 0 || xCoord > 319)
@@ -362,9 +382,9 @@ namespace nChip16
                                 //var xCoord = Regs[opcode.X] + x + 1;
                                 var xCoord = 0;
                                 if (FlipMode == FlipMode.None)
-                                    xCoord = Regs[opcode.X] + x + 1;
+                                    xCoord = (short)Regs[opcode.X] + x + 1;
                                 else if (FlipMode == FlipMode.HFlip || FlipMode == FlipMode.VFlipHFlip)
-                                    xCoord = Regs[opcode.X] + SpriteSize.Width - (x + 1);
+                                    xCoord = (short)Regs[opcode.X] + SpriteSize.Width - (x + 1);
 
                                 if (xCoord < 0 || xCoord > 319)
                                     continue;
@@ -385,9 +405,9 @@ namespace nChip16
                     break;
                 case 0x06: // DRW Rx,Ry,Rz
                     var spriteAddressZ = Regs[opcode.Z];
-                    for (int y = 0; y < SpriteSize.Height; y++)
+                    for (int y = 0; y != SpriteSize.Height; y++)
                     {
-                        for (int x = 0; x < SpriteSize.Width; x += 2) // 2 pixels/byte
+                        for (int x = 0; x != SpriteSize.Width; x += 2) // 2 pixels/byte
                         {
                             byte colorData = Memory.ReadByte(spriteAddressZ++);
 
@@ -399,9 +419,9 @@ namespace nChip16
 
                             var yCoord = 0;
                             if (FlipMode == FlipMode.None || FlipMode == FlipMode.HFlip)
-                                yCoord = Regs[opcode.Y] + y;
+                                yCoord = (short)(Regs[opcode.Y]) + y;
                             else if (FlipMode == FlipMode.VFlip || FlipMode == FlipMode.VFlipHFlip)
-                                yCoord = Regs[opcode.Y] - y + SpriteSize.Height;
+                                yCoord = (short)(Regs[opcode.Y]) - y + SpriteSize.Height;
                             
                             if (yCoord < 0 || yCoord > 239)
                                 continue;
@@ -414,9 +434,9 @@ namespace nChip16
                                 {
                                     var xCoord = 0;
                                     if (FlipMode == FlipMode.None || FlipMode == FlipMode.VFlip)
-                                        xCoord = Regs[opcode.X] + (x + i);
+                                        xCoord = (short)(Regs[opcode.X]) + (x + i);
                                     else if (FlipMode == FlipMode.HFlip || FlipMode == FlipMode.VFlipHFlip)
-                                        xCoord = Regs[opcode.X] - (x + i) + SpriteSize.Width;
+                                        xCoord = (short)(Regs[opcode.X]) - (x + i) + SpriteSize.Width;
 
                                     if (xCoord < 0 || xCoord > 319)
                                         continue;
@@ -621,17 +641,17 @@ namespace nChip16
                     break;
                 case 0x90: // Rx = Rx * HHLL
                     temp = Regs[opcode.X] * opcode.HHLL;
-                    Flags.UpdateFlags(temp);
+                    Flags.UpdateFlagsMul(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
                 case 0x91: // Rx = Rx * Ry
                     temp = Regs[opcode.X]*Regs[opcode.Y];
-                    Flags.UpdateFlags(temp);
+                    Flags.UpdateFlagsMul(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
                 case 0x92: // Rz = Rx * Ry
                     temp = Regs[opcode.X] * Regs[opcode.Y];
-                    Flags.UpdateFlags(temp);
+                    Flags.UpdateFlagsMul(temp);
                     Regs[opcode.Z] = (ushort)temp;
                     break;
                 case 0xA0: // Rx = Rx / HHLL
@@ -652,6 +672,36 @@ namespace nChip16
                     Flags.UpdateFlagsDiv(temp, rem);
                     Regs[opcode.Z] = (ushort)temp;
                     break;
+                case 0xA3: // Rx = Rx mod HHLL
+                    temp = PerformShortMod((short)Regs[opcode.X], (short)opcode.HHLL);
+                    Flags.UpdateFlagsModRem(temp);
+                    Regs[opcode.X] = (ushort)temp;
+                    break;
+                case 0xA4: // Rx = Rx mod Ry
+                    temp = PerformShortMod((short)Regs[opcode.X], (short)Regs[opcode.Y]);
+                    Flags.UpdateFlagsModRem(temp);
+                    Regs[opcode.X] = (ushort)temp;
+                    break;
+                case 0xA5: // Rx = Ry mod Rz
+                    temp = PerformShortMod((short)Regs[opcode.Y], (short)Regs[opcode.Z]);
+                    Flags.UpdateFlagsModRem(temp);
+                    Regs[opcode.X] = (ushort)temp;
+                    break;
+                case 0xA6: // Rx = Rx rem HHLL
+                    temp = Math.DivRem((short)Regs[opcode.X], (short)opcode.HHLL, out rem);
+                    Flags.UpdateFlagsModRem(rem);
+                    Regs[opcode.X] = (ushort)rem;
+                    break;
+                case 0xA7: // Rx = Rx rem Ry
+                    temp = Math.DivRem((short)Regs[opcode.X], (short)Regs[opcode.Y], out rem);
+                    Flags.UpdateFlagsModRem(rem);
+                    Regs[opcode.X] = (ushort)rem;
+                    break;
+                case 0xA8: // Rx = Ry rem Rz
+                    temp = Math.DivRem((short)Regs[opcode.Y], (short)Regs[opcode.Z], out rem);
+                    Flags.UpdateFlagsModRem(rem);
+                    Regs[opcode.X] = (ushort)rem;
+                    break;
                 case 0xB0: // Rx = SHL N
                     temp = Regs[opcode.X] << opcode.N;
                     Regs[opcode.X] = (ushort)temp;
@@ -660,7 +710,7 @@ namespace nChip16
                 case 0xB1: // Rx = SHR N
                     temp = Regs[opcode.X] >> opcode.N;
                     Regs[opcode.X] = (ushort)temp;
-                    Flags.UpdateFlags(temp);
+                    Flags.UpdateFlagsLogic(temp);
                     break;
                 case 0xB2: // Rx = Rx >> N, copying leading bit
                     temp = Regs[opcode.X] >> opcode.N;
@@ -669,12 +719,12 @@ namespace nChip16
                     break;
                 case 0xb3: // Rx = Rx << Ry
                     temp = Regs[opcode.X] << Regs[opcode.Y];
-                    Flags.UpdateFlags(temp);
+                    Flags.UpdateFlagsLogic(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
                 case 0xb4: // Rx = Rx >> Ry
                     temp = Regs[opcode.X] >> Regs[opcode.Y];
-                    Flags.UpdateFlags(temp);
+                    Flags.UpdateFlagsLogic(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
                 case 0xb5: // Rx = Rx >> Ry, copying leading bit
@@ -704,21 +754,65 @@ namespace nChip16
                         Regs[r] = Memory.ReadWord(SP);
                     }
                     break;
-                case 0xc4: // PUSH Rx
+                case 0xc4: // PUSHF
                     Memory.WriteWord(SP, Flags.BitValue);
                     SP += 2; // stack grows forward
+                    break;
+                case 0xc5: // POPF
+                    SP -= 2;
+                    Flags.BitValue = Memory.ReadWord(SP);
                     break;
                 case 0xd0: // PAL HHLL
                     SetPalette(opcode.HHLL);
                     break;
+                case 0xd1: // PAL Rx
+                    SetPalette(Regs[opcode.X]);
+                    break;
+                case 0xe0: // RX = NOT HHLL
+                    temp = ~opcode.HHLL;
+                    Flags.UpdateFlagsLogic(temp);
+                    Regs[opcode.X] = (ushort)temp;
+                    break;
+                case 0xe1: // RX = NOT RX
+                    temp = ~Regs[opcode.X];
+                    Flags.UpdateFlagsLogic(temp);
+                    Regs[opcode.X] = (ushort)temp;
+                    break;
+                case 0xe2: // RX = NOT RY
+                    temp = ~Regs[opcode.Y];
+                    Flags.UpdateFlagsLogic(temp);
+                    Regs[opcode.X] = (ushort)temp;
+                    break;
+                case 0xe3: // RX = NEG HHLL
+                    temp = 0 - opcode.HHLL;
+                    Flags.UpdateFlagsLogic(temp);
+                    Regs[opcode.X] = (ushort)temp;
+                    break;
+                case 0xe4: // RX = NEG RX
+                    temp = 0 - Regs[opcode.X];
+                    Flags.UpdateFlagsLogic(temp);
+                    Regs[opcode.X] = (ushort)temp;
+                    break;
+                case 0xe5: // RX = NEG RY
+                    temp = 0 - Regs[opcode.Y];
+                    Flags.UpdateFlagsLogic(temp);
+                    Regs[opcode.X] = (ushort)temp;
+                    break;
                 default:
-                    throw new Exception("invalid opcode");
+                    throw new Exception(
+                        string.Format("invalid opcode: {0}\r\nat address: {1}",
+                        RenderOpcode(PC), RenderCurrentAddressInfo(PC)));
             }
 
             if (!executedJumpInstruction)
                 PC += 4;
 
             return false;
+        }
+
+        private int PerformShortMod(short par1, short par2)
+        {
+            return Math.Abs(par1 % par2); //Mod should ALWAYS return positive
         }
 
         public void UpdateScreenFromFramebuffer()
@@ -895,6 +989,9 @@ namespace nChip16
                 stream.Read(fs.MagicNumber, 0, 4);
                 fs.Reserved = (byte)stream.ReadByte();
                 fs.SpecVersion = (byte)stream.ReadByte();
+                if(!DoesEmulatorHandleSpecVersion(fs.SpecVersion))
+                    throw new Exception(
+                        string.Format("nChip16 handles {0} but ROM uses {1}.. Halting load!",SpecVersionAsString(SpecVersion),SpecVersionAsString(fs.SpecVersion)));
 
                 const int soRomSize = 4;
                 var romSize = new byte[soRomSize];
@@ -926,6 +1023,16 @@ namespace nChip16
             return fs;
         }
 
+        private string SpecVersionAsString(byte specByte)
+        {
+            return (((specByte & 0xF0) >> 4)).ToString() + "." + ((int) (specByte & 0x0F)).ToString();
+        }
+
+        private bool DoesEmulatorHandleSpecVersion(byte specVersion)
+        {
+            return (specVersion <= SpecVersion);
+        }
+
         private uint ConvertBytesToDWord(byte[] checksum)
         {
             return (uint)(checksum[0] + (checksum[1] << 8) + (checksum[2] << 16) + (checksum[3] << 24));
@@ -936,10 +1043,17 @@ namespace nChip16
             return (ushort)((ushort)(romSize[1] << 8) + romSize[0]);
         }
 
+        public Opcode RenderOpcode(int address)
+        {
+            var machineCode = FetchMachineCode(address);
+            var opcode = new Opcode();
+            opcode.InterpretCode(machineCode);
+
+            return opcode;
+        }
+
         public void RenderOpcodes(RichTextBox tbSource, uint romSize)
         {
-            //var fullCode = new StringBuilder();
-
             tbSource.Hide();
             tbSource.Clear();
             var startAddress = 0;
@@ -947,7 +1061,6 @@ namespace nChip16
             if(CurrentFileStructure != null)
                 startAddress = CurrentFileStructure.StartAddress;
 
-            //const int rowCount = romSize;
             for (int i = 0; i < romSize; i += InstructionSize)
             {
                 var currentAddress = startAddress + i;
@@ -979,12 +1092,7 @@ namespace nChip16
                 var startIndexOfOpcode = tbSource.GetFirstCharIndexOfCurrentLine() + currentAddressText.Length;
                 tbSource.Select(startIndexOfOpcode, opcodeText.Length);
 
-                if (char.IsDigit(opcodeText[0]))
-                    tbSource.SelectionColor = Color.LightGray;
-                else
-                {
-                    tbSource.SelectionColor = tbSource.ForeColor;
-                }
+                tbSource.SelectionColor = char.IsDigit(opcodeText[0]) ? Color.LightGray : tbSource.ForeColor;
 
                 // make full line select
                 var startIndexOfLine = tbSource.GetFirstCharIndexOfCurrentLine();

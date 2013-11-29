@@ -15,6 +15,14 @@ namespace nChip16
     //Bit[7] - n (Negative Flag; aka Sign Flag)
     public class FlagRegister
     {
+        public static class BitFlags
+        {
+            public const ushort C = 2;
+            public const ushort Z = 4;
+            public const ushort O = 64;
+            public const ushort N = 128;
+            public const ushort ALL = C | Z | N | O;
+        };
         public bool C { get; set; }
         public bool Z { get; set; }
         public bool O { get; set; }
@@ -37,22 +45,45 @@ namespace nChip16
                 C = (value & 2) == 2;
                 Z = (value & 4) == 4;
                 O = (value & 64) == 64;
-                C = (value & 128) == 128;
+                N = (value & 128) == 128;
             }
         }
 
         public void UpdateFlags(int value)
         {
-            Z = ((ushort)value == 0);
-            N = (value & 0x8000) != 0;
-            O = (value > 0xFFFF);
-            C = (value & 0x10000) != 0;
+            UpdateFlags(value, BitFlags.ALL);
+        }
+
+        public void UpdateFlags(int value, ushort setFlagsPattern)
+        {
+            if( (setFlagsPattern & BitFlags.Z) != 0)
+                Z = ((ushort)value == 0);
+
+            if( (setFlagsPattern & BitFlags.N) != 0)
+                N = (value & 0x8000) != 0;
+
+            if( (setFlagsPattern & BitFlags.O) != 0)
+                O = (value > 0xFFFF);
+
+            if( (setFlagsPattern & BitFlags.C) != 0)
+                C = (value & 0x10000) != 0;
+        }
+
+        public void UpdateFlagsModRem(int value)
+        {
+            UpdateFlags(value, BitFlags.Z | BitFlags.N);
+        }
+
+        public void UpdateFlagsMul(int value)
+        {
+            UpdateFlags(value, BitFlags.Z | BitFlags.N | BitFlags.C);
         }
 
         public void UpdateFlagsLogic(int value)
         {
-            Z = ((ushort)value == 0);
-            N = (value & 0x8000) != 0;
+            //Z = ((ushort)value == 0);
+            //N = (value & 0x8000) != 0;
+            UpdateFlags(value, BitFlags.Z | BitFlags.N);
         }
 
         internal void UpdateFlagsSub(ushort x, ushort y, int value)
@@ -87,14 +118,14 @@ namespace nChip16
 
         internal void UpdateFlagsDiv(int temp, int rem)
         {
-            UpdateFlags(temp);
+            UpdateFlagsMul(temp);
             // C=> - for div - is set when the remainder of the division is non-zero, else it is cleared.
             C = (rem != 0);
         }
 
         internal void UpdateFlagsSar(int temp, int beforeShift)
         {
-            UpdateFlags(temp);
+            UpdateFlagsLogic(temp);
             // N=> - for sar - leading bit is copied to N.
             N = (beforeShift & 0x8000) != 0;
         }

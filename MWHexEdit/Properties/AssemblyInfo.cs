@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MWHexEdit")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription(".NET Hexeditor library written in C#")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Magnus Wedmark")]
 [assembly: AssemblyProduct("MWHexEdit")]
-[assembly: AssemblyCopyright("Copyright ©  2009-2013")]
+[assembly: AssemblyCopyright("Copyright ©  Magnus Wedmark 2009-2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

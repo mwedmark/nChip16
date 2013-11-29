@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bmp16ToBin
 {
@@ -23,13 +19,9 @@ namespace Bmp16ToBin
             var bmpImage = new Bitmap(bmpPath);
             var binData = new List<byte>();
             var palette = new List<Color>();
-            //if(bmpImage.Width )
-            //    throw new Exception("BMp16ToBin can only handle images as 320*240");
-
-            //binData.Add((byte)(bmpImage.Width >> 1));
-            //binData.Add((byte)(bmpImage.Height));
 
             // first build palette
+            // color of pixel (0,0) will set background color
             for (int y = 0; y < bmpImage.Height; y++)
             {
                 for (int x = 0; x < bmpImage.Width; x++)
@@ -40,9 +32,21 @@ namespace Bmp16ToBin
                 }
             }
 
+            // make sure all palettes have 16 colors / 48 bytes in size
+            while (palette.Count != 16)
+                palette.Add(Color.Black);
+
             // try and match closest color to black and move it to index 0
-            palette.Sort((color, color1) => (color.R + color.G + color.B) - (color1.R + color1.G + color1.B));
+            //palette.Sort((color, color1) => (color.R + color.G + color.B) - (color1.R + color1.G + color1.B));
             File.WriteAllBytes(bmpPath + ".PAL", ToByteArray(palette));
+
+            // will handle images up to 511x255
+            var xHighByte = (byte)((bmpImage.Width&0x100)>>8); // only a single bit used
+            var xLowByte = (byte)(bmpImage.Width&0xFF);
+            var yByte = (byte)(bmpImage.Height&0xFF);
+            binData.Add(xHighByte);
+            binData.Add(xLowByte);
+            binData.Add(yByte);
 
             for (int y = 0; y < bmpImage.Height; y++)
             {

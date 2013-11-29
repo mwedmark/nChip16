@@ -1,0 +1,6 @@
+C:\Projects\nChip16\ImageCompression\bin\Release\ImageCompression.exe.config
+C:\Projects\nChip16\ImageCompression\bin\Release\ImageCompression.exe
+C:\Projects\nChip16\ImageCompression\bin\Release\ImageCompression.pdb
+C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.csprojResolveAssemblyReference.cache
+C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.exe
+C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.pdb

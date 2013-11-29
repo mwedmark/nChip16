@@ -27,6 +27,13 @@ namespace nChip16
         public static readonly Color ProgramCounterColor = Color.Yellow;
         public static readonly Color BreakpointOnPcColor = Color.Orange;
 
+        private const int PcTag = 16;
+        private const int SpTag = 17;
+        private const int CTag = 18;
+        private const int ZTag = 19;
+        private const int NTag = 20;
+        private const int OTag = 21;
+
         private readonly List<RegisterTextBox> Registers = new List<RegisterTextBox>();
         private List<Watch> Watches = new List<Watch>();
         private int endOfProgram = 0;
@@ -46,9 +53,13 @@ namespace nChip16
             for (int i = 0; i < 16;i++ )
                 Registers.Add(CreateRegisterTextBox("R" + i.ToString("X1"), new Point(25 + (i/8*70), 70+((i%8)*25)), i));
 
-            // setup tags for SP and PC
-            tbPC.Tag = 16;
-            tbSP.Tag = 17;
+            // setup tags for SP and PC and for Flag textboxes
+            tbPC.Tag = PcTag;
+            tbSP.Tag = SpTag;
+            tbFlagC.Tag = CTag;
+            tbFlagN.Tag = NTag;
+            tbFlagO.Tag = OTag;
+            tbFlagZ.Tag = ZTag;
 
             // is a single parameter used? Then this is a Chip16 file to load at startup
             if (args.Length == 2)
@@ -146,9 +157,7 @@ namespace nChip16
             textBox.Text = "0000";
             textBox.MaxLength = 4;
             textBox.TextAlign = HorizontalAlignment.Center;
-            textBox.TextChanged += textBox_TextChanged;
             textBox.KeyDown += textBox_KeyDown;  
-
             label.Size = new Size(20, 19);
             label.Name = "lbl" + registerName;
             label.Text = registerName;
@@ -173,49 +182,41 @@ namespace nChip16
             {
                 switch (vmRegisterIndex)
                 {
-                    case 16:
+                    case PcTag:
                         vm.PC = value;
                         break;
-                    case 17:
+                    case SpTag:
                         vm.SP = value;
                         break;
+                    //case ZTag:
+                    //    vm.Flags.Z = ConvertUshortToBool(value);
+                    //    break;
+                    //case NTag:
+                    //    vm.Flags.N = ConvertUshortToBool(value);
+                    //    break;
+                    //case OTag:
+                    //    vm.Flags.O = ConvertUshortToBool(value);
+                    //    break;
+                    //case CTag:
+                    //    vm.Flags.C = ConvertUshortToBool(value);
+                    //    break;
                     default:
                         throw new Exception("Invalid tag given in textBox_KeyDown");
-                        break;
 
-                }
-
-                
+                }   
             }
         }
 
-        void textBox_TextChanged(object sender, EventArgs e)
+        private bool ConvertUshortToBool(ushort value)
         {
-            /*
-            var textBox = (KeyHandleTextBox)sender;
-
-            if (textBox.Tag == null)
-                return;
-
-            var vmRegisterIndex = (int)textBox.Tag;
-
-            ushort value = ushort.Parse(textBox.Text, NumberStyles.HexNumber);
-            vm.Regs[vmRegisterIndex] = value;
-             */
+            return value != 0;
         }
 
         private void vm_OnPCChange(ushort oldValue, ushort newValue)
         {
-            //vm.PC = newValue;
- 
             if (Running || string.IsNullOrEmpty(tbSource.Text))
                 return;
 
-            //var rowLength = tbSource.Lines[0].Length + 1;
-            //tbSource.Select(rowLength * oldValue, rowLength);
-            //tbSource.SelectionBackColor = Color.White;
-            //tbSource.Select(rowLength * newValue, rowLength);
-            //tbSource.SelectionBackColor = ProgramCounterColor;
             RemovePcHighlight();
             MarkWithHighlight(tbSource, newValue);
         }
@@ -229,7 +230,6 @@ namespace nChip16
             {
                 memBitmap = new MemBitmap(pbEmuScreen.Width, pbEmuScreen.Height);
                 pbEmuScreen.Image = memBitmap.Bitmap;
-                //memBitmap.Bitmap.SetPixel(100, 100, Color.White);
                 pbEmuScreen.DrawToBitmap(memBitmap.Bitmap, new Rectangle(0, 0, 320, 240));
                 vm.SetScreen(memBitmap);
                 vm.GetKeyboardState += vm_GetKeyboardState;
@@ -422,7 +422,7 @@ namespace nChip16
         private void emuTimer_Tick(object sender, EventArgs e)
         {
             emuTimer.Enabled = true;
-             ExecuteFrame();
+            ExecuteFrame();
 
             if(cbRealtimeRegisterUpdate.Checked)
                 UpdateRegisterFields();
@@ -475,6 +475,11 @@ namespace nChip16
             {
                 // we've hit a breakpoint, pause, then stop timer and set mode to Paused
                 ToggleRunState();
+                if (!string.IsNullOrEmpty(vm.ErrorMessage))
+                {
+                    MessageBox.Show(vm.ErrorMessage, "Chip16 Internal VM error!");
+                    vm.ErrorMessage = "";
+                }
             }
         }
 
@@ -546,12 +551,13 @@ namespace nChip16
                 Cursor = Cursors.WaitCursor;
                 // first make full reset of vm
                 vm.Reset();
-                UpdateAllControls();
+                
                 // then load and start program
                 if (!string.IsNullOrEmpty(FileDropped))
                     vm.LoadProgram(FileDropped);
 
                 hexEdit1.SetData(vm.Memory.GetInternalMemoryArray(), 0);
+                UpdateAllControls();
 
                 // after program has loaded, maybe labels have been updated. 
                 // Update watches that use LockTo: Label
@@ -1105,6 +1111,31 @@ namespace nChip16
         {
             vm.ResetInstructionCount();
             UpdateInstructionCount();
+        }
+
+        private void tbFlagC_DoubleClick(object sender, EventArgs e)
+        {
+            var currentTag = (int)((TextBox) sender).Tag;
+
+            switch (currentTag)
+            {
+                case CTag:
+                    vm.Flags.C = !vm.Flags.C;
+                    break;
+                case NTag:
+                    vm.Flags.N = !vm.Flags.N;
+                    break;
+                case OTag:
+                    vm.Flags.O = !vm.Flags.O;
+                    break;
+                case ZTag:
+                    vm.Flags.Z = !vm.Flags.Z;
+                    break;
+                default:
+                    throw new Exception("Unknown tbFlag Control connected to Double-click");
+            }
+            UpdateRegisterFields();
+            ActiveControl = null;
         }
 
     }

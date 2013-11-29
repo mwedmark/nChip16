@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageCompression", "ImageCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bmp16ToBin", "Bmp16ToBin\Bmp16ToBin.csproj", "{20CB5A31-7F4F-40EA-A83E-43D989433A77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateImportBinForPics", "CreateImportBinForPics\CreateImportBinForPics.csproj", "{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,30 @@ Global
 		{20CB5A31-7F4F-40EA-A83E-43D989433A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20CB5A31-7F4F-40EA-A83E-43D989433A77}.Release|Any CPU.Build.0 = Release|Any CPU
 		{20CB5A31-7F4F-40EA-A83E-43D989433A77}.Release|Itanium.ActiveCfg = Release|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.Debug|Itanium.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugAlpha|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugAlpha|Any CPU.Build.0 = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugAlpha|Itanium.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugButta|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugButta|Any CPU.Build.0 = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugButta|Itanium.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugRecursive|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugRecursive|Any CPU.Build.0 = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugRecursive|Itanium.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugSier|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugSier|Any CPU.Build.0 = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugSier|Itanium.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugSlideshow|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugSlideshow|Any CPU.Build.0 = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugSlideshow|Itanium.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugWithoutPars|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugWithoutPars|Any CPU.Build.0 = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.DebugWithoutPars|Itanium.ActiveCfg = Debug|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F6157FA-8B4B-4753-9FBA-83B5D480E2E3}.Release|Itanium.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
