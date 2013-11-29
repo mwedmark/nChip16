@@ -1,0 +1,42 @@
+Label memory mapping:
+---------------------
+
+ 0x0004 : Main
+ 0x0018 : DrawNewFrame
+ 0x002c : DrawFrame
+ 0x0034 : DrawNextNumber
+ 0x0054 : DrawSpace
+ 0x0064 : ScrollFrame
+ 0x007c : ScrollFinished
+ 0x0080 : ShiftValuesLeft
+ 0x0090 : ShiftNext
+ 0x00b4 : ReadNewValue
+ 0x00c4 : NoShiftNibble
+ 0x00d4 : NoAddAddress
+ 0x00e8 : InitMiniMaxi
+ 0x0124 : DrawNumber
+ 0x01a8 : Draw0
+ 0x0208 : Draw1
+ 0x0254 : Draw2
+ 0x02c0 : Draw3
+ 0x0320 : Draw4
+ 0x03b0 : Draw5
+ 0x0428 : Draw6
+ 0x04a8 : Draw7
+ 0x0518 : Draw8
+ 0x05ac : Draw9
+ 0x0628 : DrawA
+ 0x0694 : DrawB
+ 0x0770 : DrawC
+ 0x07c4 : DrawD
+ 0x0864 : DrawE
+ 0x0908 : DrawF
+ 0x0988 : ReadByte
+ 0x0994 : WriteByte
+ 0x09b4 : StartOfTiles
+ 0x09be : EndOfTiles
+ 0x09bf : EndOfProgram
+ 0x09c0 : FontSprites
+ 0x15c3 : Palette
+
+---------------------

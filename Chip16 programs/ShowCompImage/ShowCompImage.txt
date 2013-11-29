@@ -1,0 +1,55 @@
+Label memory mapping:
+---------------------
+
+ 0x0000 : main
+ 0x0020 : LoopInitPixelBuffer
+ 0x0034 : NewPicture
+ 0x0054 : MainPixelLoop
+ 0x008c : NibblePixelLoop
+ 0x00b0 : loop
+ 0x00b4 : IncreasePixelPointer
+ 0x00d8 : IPP_Return
+ 0x00dc : EndOfPicture
+ 0x0108 : DataCollMode
+ 0x0118 : DataCollLoop
+ 0x017c : EndOfDataColl
+ 0x0184 : BigDataMode
+ 0x01ac : ReadHeader
+ 0x022c : WaitSeconds
+ 0x023c : WaitSecondsLoop
+ 0x0240 : WaitSecFrameLoop
+ 0x0264 : ReadByte
+ 0x0270 : WriteByte
+ 0x0290 : TonePalette
+ 0x02b0 : PaletteToningMainLoop
+ 0x02c8 : ToneLoop
+ 0x02f4 : TonePlus
+ 0x02fc : ToneMinus
+ 0x0300 : WriteTone
+ 0x030c : ChangesDone
+ 0x0328 : CopyPalette
+ 0x0344 : CopyPaletteLoop
+ 0x0370 : CreateBwPalette
+ 0x0388 : BwPaletteLoop
+ 0x0404 : FromPalette
+ 0x0434 : ToPalette
+ 0x0464 : ZeroPalette
+ 0x0494 : WorkingPalette
+ 0x04c4 : EndOfProgram
+ 0x04c5 : NumberOfPics
+ 0x04c6 : XStartMiddle
+ 0x04c8 : YStartMiddle
+ 0x04ca : XEndMiddle
+ 0x04cc : YEndMiddle
+ 0x04ce : XSize
+ 0x04d0 : YSize
+ 0x04d2 : Picture
+ 0x0519 : PIC1
+ 0x0e9d : PIC2
+ 0x5b67 : PIC3
+ 0x8da4 : Palette
+ 0x8dad : PAL1
+ 0x8db6 : PAL2
+ 0x8de6 : PAL3
+
+---------------------
