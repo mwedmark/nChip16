@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ImageCompression;
 
 namespace Chip16
@@ -19,17 +16,15 @@ namespace Chip16
         private CciHeader CompressedFileHeader = new CciHeader();
         private string outputFileName;
 
-        public ImageCompression(){}
-
         public void PerformNibbleCompression(string filePath)
         {
             Data = File.ReadAllBytes(filePath);
 
             //extract the first 3 bytes as X,Y size information. This is needed for the destination compressed format
-            var binFileHeaderSize = 3;
+            const int binFileHeaderSize = 3;
             var headerData = Data.Take(binFileHeaderSize).ToArray();
             CompressedFileHeader = IntepretBinHeader(headerData);
-             Data = Data.Skip(binFileHeaderSize).ToArray();
+            Data = Data.Skip(binFileHeaderSize).ToArray();
 
             CreateCompressedNibbleData();
 

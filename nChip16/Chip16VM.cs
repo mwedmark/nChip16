@@ -316,8 +316,9 @@ namespace nChip16
                 case 0x00: // NOP
                     break;
                 case 0x01: // CLS
-                    ClearScreen();
                     bgc = 0;
+                    ClearScreen();
+                    //bgc = 0;
                     break;
                 case 0x02: // VBLNK
                     PC += 4;
@@ -682,10 +683,10 @@ namespace nChip16
                     Flags.UpdateFlagsModRem(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
-                case 0xA5: // Rx = Ry mod Rz
-                    temp = PerformShortMod((short)Regs[opcode.Y], (short)Regs[opcode.Z]);
+                case 0xA5: // Rz = Rx mod Ry
+                    temp = PerformShortMod((short)Regs[opcode.X], (short)Regs[opcode.Y]);
                     Flags.UpdateFlagsModRem(temp);
-                    Regs[opcode.X] = (ushort)temp;
+                    Regs[opcode.Z] = (ushort)temp;
                     break;
                 case 0xA6: // Rx = Rx rem HHLL
                     temp = Math.DivRem((short)Regs[opcode.X], (short)opcode.HHLL, out rem);
@@ -697,10 +698,10 @@ namespace nChip16
                     Flags.UpdateFlagsModRem(rem);
                     Regs[opcode.X] = (ushort)rem;
                     break;
-                case 0xA8: // Rx = Ry rem Rz
-                    temp = Math.DivRem((short)Regs[opcode.Y], (short)Regs[opcode.Z], out rem);
+                case 0xA8: // Rz = Rx rem Ry
+                    temp = Math.DivRem((short)Regs[opcode.X], (short)Regs[opcode.Y], out rem);
                     Flags.UpdateFlagsModRem(rem);
-                    Regs[opcode.X] = (ushort)rem;
+                    Regs[opcode.Z] = (ushort)rem;
                     break;
                 case 0xB0: // Rx = SHL N
                     temp = Regs[opcode.X] << opcode.N;
@@ -727,7 +728,7 @@ namespace nChip16
                     Flags.UpdateFlagsLogic(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
-                case 0xb5: // Rx = Rx >> Ry, copying leading bit
+                case 0xb5: // Rx = Rx >> Ry, copying leadig bit
                     temp = Regs[opcode.X] >> Regs[opcode.Y];
                     Flags.UpdateFlagsSar(temp, Regs[opcode.X]);
                     Regs[opcode.X] = (ushort)temp;
@@ -812,7 +813,9 @@ namespace nChip16
 
         private int PerformShortMod(short par1, short par2)
         {
-            return Math.Abs(par1 % par2); //Mod should ALWAYS return positive
+            //return Math.Abs((par1%par2 + par1)%par1);
+            //return Math.Abs(par1 % par2); //Mod should ALWAYS return positive
+            return par1 - (int)Math.Floor((double)par1 / par2) * par2;
         }
 
         public void UpdateScreenFromFramebuffer()

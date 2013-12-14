@@ -12,13 +12,35 @@ namespace Chip16
     {
         static void Main(string[] args)
         {
-            // var compressionTests = new CompressionTests(args[0]);
-            // compressionTests.TestAll();
-            foreach (var arg in args)
+            var fileList = ExtractFiles(args);
+
+            foreach (var file in fileList)
             {
                 var compress = new ImageCompression();
-                compress.PerformNibbleCompression(arg);
+                compress.PerformNibbleCompression(file);
             }
+        }
+
+        private static List<string> ExtractFiles(string[] pars)
+        {
+            var fileList = new List<string>();
+
+            if ((pars[0] == "/d") && (pars.Length == 2))
+            {
+                var dirPath = pars[1];
+                // extract all files in the given directory
+                if (!Directory.Exists(dirPath))
+                    throw new Exception("The given second parameter is not a directory");
+
+                var pictureFiles = Directory.GetFiles(dirPath, "*.bin");
+                fileList.AddRange(pictureFiles);
+            }
+            else
+            {
+                fileList.AddRange((pars));
+            }
+
+            return fileList;
         }
     }
 }

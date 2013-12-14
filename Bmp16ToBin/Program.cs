@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
@@ -8,8 +9,32 @@ namespace Bmp16ToBin
     {
         static void Main(string[] args)
         {
-            foreach (var filePath in args)
+            var fileList = ExtractFiles(args);
+
+            foreach (var filePath in fileList)
                 MakeBin(filePath);
+        }
+
+        private static List<string> ExtractFiles(string[] pars)
+        {
+            var fileList = new List<string>();
+
+            if ((pars[0] == "/d") && (pars.Length == 2))
+            {
+                var dirPath = pars[1];
+                // extract all files in the given directory
+                if (!Directory.Exists(dirPath))
+                    throw new Exception("The given second parameter is not a directory");
+
+                var pictureFiles = Directory.GetFiles(dirPath, "*.bmp");
+                fileList.AddRange(pictureFiles);
+            }
+            else
+            {
+                fileList.AddRange((pars));
+            }
+
+            return fileList;
         }
 
         private static void MakeBin(string filePath)
@@ -32,6 +57,19 @@ namespace Bmp16ToBin
                 }
             }
 
+            if (palette.Count > 16)
+            {
+                throw new Exception("A maximum of 16 colors in each BMP-file can be handled.");
+            }
+            // Special version for Flags-demo, uses 14 colors per flags and hardcodes
+            // 0=Black and 1=White. These are then used for background and text.
+            //if(palette.Count > 13)
+            //    throw new Exception("Special version, only 13 colors allowed per image");
+
+            //palette.Insert(0, Color.Black); // transparent
+            //palette.Insert(1, Color.White);
+            //palette.Insert(2, Color.Black); // non-transparent
+            
             // make sure all palettes have 16 colors / 48 bytes in size
             while (palette.Count != 16)
                 palette.Add(Color.Black);
