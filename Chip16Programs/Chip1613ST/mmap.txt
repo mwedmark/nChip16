@@ -1,0 +1,57 @@
+Label memory mapping:
+---------------------
+
+ 0x0000 : Main
+ 0x0014 : TEST_1
+ 0x0028 : TEST_2
+ 0x0040 : TEST_3
+ 0x005c : TEST_4
+ 0x0070 : TEST_5
+ 0x0088 : TEST_6
+ 0x00a4 : TEST_7
+ 0x00b4 : TEST_8
+ 0x00c8 : TEST_9
+ 0x00dc : TEST_10
+ 0x00ec : TEST_11
+ 0x0100 : TEST_12
+ 0x011c : Loop
+ 0x0120 : DrawChars
+ 0x0124 : OSDInit
+ 0x0144 : OSDDrawLoop
+ 0x0158 : NoSpace
+ 0x0190 : WriteFailedCurrentTest
+ 0x019c : LoopError
+ 0x01a0 : WriteALLTESTSOK
+ 0x01ac : WriteFAILED
+ 0x01b8 : WriteCurrentNumber
+ 0x01c4 : WriteString
+ 0x01ec : WriteStringEnd
+ 0x01f0 : IncreaseTestNumber
+ 0x0224 : WriteBCD0Back
+ 0x0228 : EndIncreaseTestNumber
+ 0x022c : ReadByte
+ 0x0238 : WriteByte
+ 0x0258 : SetC
+ 0x0278 : UnsetC
+ 0x0298 : ToggleC
+ 0x02b8 : SetZ
+ 0x02d8 : UnsetZ
+ 0x02f8 : ToggleZ
+ 0x0318 : SetO
+ 0x0338 : UnsetO
+ 0x0358 : ToggleO
+ 0x0378 : SetN
+ 0x0398 : UnsetN
+ 0x03c8 : ToggleN
+ 0x03e8 : SetAllFlags
+ 0x03fc : UnsetAllFlags
+ 0x0410 : EndOfProgram
+ 0x0411 : StartOSD
+ 0x0461 : EndOSD
+ 0x0462 : CurrentTest
+ 0x0465 : FAILED
+ 0x0472 : AllTestsOk
+ 0x0481 : Palette
+ 0x04b1 : MarioFont
+
+---------------------

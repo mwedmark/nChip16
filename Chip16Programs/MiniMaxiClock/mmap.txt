@@ -1,0 +1,38 @@
+Label memory mapping:
+---------------------
+
+ 0x0000 : InitMain
+ 0x0008 : Main
+ 0x001c : InitTime
+ 0x0038 : IncreaseTime
+ 0x0098 : CheckFor24
+ 0x00a8 : EndOfInc
+ 0x00ac : DrawTime
+ 0x012c : WaitSecond
+ 0x0134 : WaitLoop
+ 0x0148 : WaitSeconds
+ 0x0158 : WaitSecondsLoop
+ 0x015c : WaitSecFrameLoop
+ 0x0180 : InitMiniMaxi
+ 0x01bc : DrawNumber
+ 0x0240 : Draw0
+ 0x02a0 : Draw1
+ 0x02ec : Draw2
+ 0x0358 : Draw3
+ 0x03b8 : Draw4
+ 0x0448 : Draw5
+ 0x04c0 : Draw6
+ 0x0540 : Draw7
+ 0x05b0 : Draw8
+ 0x0644 : Draw9
+ 0x06c0 : DrawA
+ 0x072c : DrawB
+ 0x0808 : DrawC
+ 0x085c : DrawD
+ 0x08fc : DrawE
+ 0x09a0 : DrawF
+ 0x0a20 : EndOfProgram
+ 0x0a21 : FontSprites
+ 0x1624 : Palette
+
+---------------------
