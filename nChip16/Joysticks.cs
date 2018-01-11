@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace nChip16
+﻿namespace nChip16
 {
     //Bit[0] - Up
     //Bit[1] - Down
@@ -17,7 +11,10 @@ namespace nChip16
     //Bit[8 - 15] - Unused (Always zero).
     public class Joystick
     {
-        public Joystick() {}
+        public Joystick(int joystickNumber)
+        {
+            JoystickNumber = joystickNumber;
+        }
 
         public int JoystickNumber { get; set; }
         public JoystickMoves Change { get; set; }

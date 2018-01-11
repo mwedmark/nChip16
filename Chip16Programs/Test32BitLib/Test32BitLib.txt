@@ -1,0 +1,42 @@
+Label memory mapping:
+---------------------
+
+ 0x0004 : test_low_word_add
+ 0x0028 : test_high_word_add
+ 0x004c : test_low+high_word_add
+ 0x0070 : test_neg_value_add
+ 0x0094 : test_low_word_sub
+ 0x00b8 : test_high_word_sub
+ 0x00dc : test_low+high_word_sub
+ 0x0100 : test_neg_value_sub
+ 0x0124 : test_16_16_mul
+ 0x0140 : test_32_32_div
+ 0x0164 : test_32_32_highvals_div
+ 0x0188 : test_32bit_shr
+ 0x01a8 : test_32bit_shr_bigshift
+ 0x01c8 : test_32bit_shl
+ 0x01e8 : test_32bit_shl_bigshift
+ 0x0208 : finished
+ 0x020c : error
+ 0x0210 : 32bit_addi
+ 0x0224 : no_add_carry
+ 0x023c : 32bit_subi
+ 0x0250 : no_sub_carry
+ 0x0268 : 16_16_muli
+ 0x02a0 : add_all_terms
+ 0x02bc : no_carry_step1
+ 0x02e0 : no_carry_step2
+ 0x02f4 : no_carry_step3
+ 0x02fc : 32bit_divi
+ 0x0300 : sub_loop
+ 0x032c : 32bit_div_adv
+ 0x0330 : 32bit_shr
+ 0x0334 : next_32bit_shr
+ 0x0344 : no_top_bit_shr
+ 0x0348 : after_shr
+ 0x0360 : 32bit_shl
+ 0x0364 : next_32bit_shl
+ 0x0374 : no_top_bit_shl
+ 0x0378 : after_shl
+
+---------------------

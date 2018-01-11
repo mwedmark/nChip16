@@ -45,4 +45,12 @@ C:\Projects\nChip16\MWHexEdit\obj\Debug\MW.HexEdit.HexEdit.resources
 C:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csproj.GenerateResource.Cache
 C:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.dll
 C:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.pdb
+D:\Projects\nChip16\MWHexEdit\bin\Debug\MWHexEdit.dll.config
+D:\Projects\nChip16\MWHexEdit\bin\Debug\MWHexEdit.dll
+D:\Projects\nChip16\MWHexEdit\bin\Debug\MWHexEdit.pdb
+D:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csprojResolveAssemblyReference.cache
+D:\Projects\nChip16\MWHexEdit\obj\Debug\MW.HexEdit.HexEdit.resources
+D:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csproj.GenerateResource.Cache
+D:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.dll
+D:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.pdb
 C:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csprojResolveAssemblyReference.cache

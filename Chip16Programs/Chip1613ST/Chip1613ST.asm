@@ -105,6 +105,20 @@ TEST_12:
 	neg  R0, R1
 	cmpi R0, -32767
 	jnz  WriteFailedCurrentTest
+TEST_13:
+	call IncreaseTestNumber
+; B2 - SAR RX, N (using negative Rx)
+	ldi  R0, -12345
+	sar  R0, 8
+	cmpi R0, -49
+	jnz  WriteFailedCurrentTest	
+TEST_14:
+	call IncreaseTestNumber
+; 90 - DIVI RX, N (using negative Rx)
+	ldi   R0, -12345
+	divi  R0, 32
+	cmpi R0, -385
+	jnz  WriteFailedCurrentTest
 	
 	call WriteALLTESTSOK
 	call DrawChars

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace nChip16
@@ -12,11 +14,12 @@ namespace nChip16
 
     public enum RunningState { Started, Running, Paused };
 
-    public class Chip16VM
+    public class Chip16Vm
     {
         public const byte SpecVersion = ((1 << 4) + 3); //1.3
         public const int InstructionSize = 4;
         public const int InstructionsPerFrame = 1000000/60;
+        public bool WaitForVBlank = true;
         private const int InitStackAddress = 0xFDF0; // Start of stack (512 bytes total size, 128 addresses depth).
         private readonly Random rnd = new Random((int)DateTime.Now.Ticks);
 
@@ -27,10 +30,11 @@ namespace nChip16
         private FlipMode FlipMode = FlipMode.None;
 
         public int InstructionCount = 0;
+        //public int InstructionsLastFrame = 0;
 
         public FileStructure CurrentFileStructure;
         public List<LineLabel> Labels = new List<LineLabel>();
-        private List<ushort> Breakpoints = new List<ushort>();
+        private readonly List<ushort> Breakpoints = new List<ushort>();
  
         public bool UsingLineLabels { get; set; }
 
@@ -59,6 +63,9 @@ namespace nChip16
         public event ChangedValueHandler OnPCChange;
         //1x 16 bit stack pointer (SP)
         public ushort SP { get; set; }
+        public bool TimerElapsed { get; internal set; }
+        public bool GraphicsEnabled { get; internal set; } = true;
+
         //16x 16 bit general purpose registers (R0 - RF)
         public ushort [] Regs = new ushort[16];
         
@@ -79,10 +86,12 @@ namespace nChip16
         public Size SpriteSize = new Size();
         private MemBitmap Screen;
 
+        public long LastFrameTime;
+        public long ExecutedFrameTime;
         //Machine uses little-endian byte ordering.
         //All opcodes take exactly 1 cycle to execute.
         //CPU speed is 1 Mhz.
-        public Chip16VM()
+        public Chip16Vm()
         {
             Reset();
         }
@@ -180,21 +189,104 @@ namespace nChip16
             }
         }
 
-        private int InstructionsPerVBlank = 0;
+        public int InstructionsLastFrame = 0;
+
+        /// <summary>
+        /// Skriv specifikt program som fyller skärmen och klocka detta.
+        /// Antalet inst kommer att vara samma, men förhoppningsvis kan vi optimera
+        /// själva exekveringen.
+        /// </summary>
+        public void ExecuteFillScreen()
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+
+            ExecutedFrameTime = sw.ElapsedMilliseconds;
+        }
+
+        public static void ExecuteThread(Chip16Vm vm)
+        {
+            while (true) // should never end
+            {
+                if (vm.WaitForVBlank && (vm.InstructionsLastFrame > InstructionsPerFrame))
+                {
+                    //break;
+                    vm.CurrentState = RunningState.Paused; // current frame elapsed
+                }
+
+                if (!vm.WaitForVBlank && vm.TimerElapsed)
+                {
+                    vm.TimerElapsed = false;
+                    vm.CurrentState = RunningState.Paused; // current frame elapsed
+                    //break;
+                }
+
+                vm.InstructionsLastFrame++;
+                //TODO: DO other check to be able to RUN rounds between a single brekpoint
+                if ((vm.Breakpoints.Contains(vm.PC) && vm.CurrentState != RunningState.Started))
+                {
+                    vm.CurrentState = RunningState.Paused;
+                    //return 0;
+                }
+                if (vm.CurrentState == RunningState.Paused)
+                {
+                    Thread.Sleep(100);
+                    // check error code for crash
+                    if (!string.IsNullOrEmpty(vm.ErrorMessage))
+                    {
+                        //return 0;
+                    }
+                }
+                try
+                {
+                    if (vm.CurrentState == RunningState.Started) // just started. State used to skip initial breakpoint
+                        vm.CurrentState = RunningState.Running;
+
+                    if (vm.ExecuteInstruction())
+                    {
+                        var temp = vm.InstructionsLastFrame;
+                        //InstructionsPerVBlank = 0;
+                        // Found VBLNK, present num of Chip16 instructions as usage
+                        //return temp; // found infinitive loop, break current frame and wait for next frame
+                    }
+                    vm.InstructionCount++; // only count instructions that isn't an infintive loop
+                }
+                catch (Exception e)
+                {
+                    //MessageBox.Show(e.Message);
+                    //return -1;
+                    throw;
+                    //return 0;
+                }
+            }
+        } 
 
         /// <summary>
         /// Execute 1'000'000/60 instructions to get correct timing of Chip16 machine
         /// </summary>
         public int ExecuteFrame()
         {
+            InstructionsLastFrame = 0;
+            var sw = new Stopwatch();
+            sw.Start();
+
             UpdateKeyboardState();
 
             // update palette from memory once for each frame
             SetPalette(lastPaletteAddress);
 
-            for (int i = 0; i < InstructionsPerFrame; i++)
+            while(true)
             {
-                InstructionsPerVBlank++;
+                if (WaitForVBlank && (InstructionsLastFrame > InstructionsPerFrame))
+                    break;
+
+                if (!WaitForVBlank && TimerElapsed)
+                {
+                    TimerElapsed = false;
+                    break;
+                }
+
+                InstructionsLastFrame++;
                 //TODO: DO other check to be able to RUN rounds between a single brekpoint
                 if ((Breakpoints.Contains(PC) && CurrentState != RunningState.Started))
                 {
@@ -206,8 +298,6 @@ namespace nChip16
                     // check error code for crash
                     if (!string.IsNullOrEmpty(ErrorMessage))
                     {
-                        //MessageBox.Show(ErrorMessage);
-                        //ErrorMessage = "";
                         return 0;
                     }
                 }
@@ -218,8 +308,8 @@ namespace nChip16
                 
                 if (ExecuteInstruction())
                 {
-                    var temp = InstructionsPerVBlank;
-                    InstructionsPerVBlank = 0;
+                    var temp = InstructionsLastFrame;
+                    //InstructionsPerVBlank = 0;
                     // Found VBLNK, present num of Chip16 instructions as usage
                     return temp; // found infinitive loop, break current frame and wait for next frame
                 }
@@ -233,12 +323,32 @@ namespace nChip16
                     return 0;
                 }
             }
-            return InstructionsPerVBlank;
+
+            ExecutedFrameTime = sw.ElapsedMilliseconds;
+            return InstructionsLastFrame;
         }
+
+        /// <summary>
+        /// Simple implementation with no breakpoints or other features
+        /// </summary>
+        //public int ExecuteTimerRound()
+        //{
+        //    InstructionsLastFrame = 0;
+        //    while(!TimerElapsed)
+        //    {
+        //        InstructionsLastFrame++;
+        //        ExecuteInstruction();
+        //    }
+
+        //    TimerElapsed = false;
+
+        //    // timer has elapsed
+        //    return InstructionsLastFrame;
+        //}
 
         private void UpdateKeyboardState()
         {
-            // map keyboard to Chip16 Joysticks
+            // map keyboard to Chip16 Joysticks, use the current mapping: default or Chip8
             var keyboardState = GetKeyboardState();
             Memory.WriteByte(0xFFF0, (byte)(keyboardState&0xFF));
 
@@ -646,7 +756,7 @@ namespace nChip16
                     Regs[opcode.X] = (ushort)temp;
                     break;
                 case 0x91: // Rx = Rx * Ry
-                    temp = Regs[opcode.X]*Regs[opcode.Y];
+                    temp = Regs[opcode.X] * Regs[opcode.Y];
                     Flags.UpdateFlagsMul(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
@@ -657,19 +767,22 @@ namespace nChip16
                     break;
                 case 0xA0: // Rx = Rx / HHLL
                     //temp = Regs[opcode.X] / opcode.HHLL;
-                    temp = Math.DivRem(Regs[opcode.X], opcode.HHLL, out rem);
+                    Math.DivRem(Regs[opcode.X], opcode.HHLL, out rem);
+                    temp = (short) Regs[opcode.X]/opcode.HHLL;
                     Flags.UpdateFlagsDiv(temp, rem);
                     Regs[opcode.X] = (ushort)temp;
                     break;
                 case 0xA1: // Rx = Rx / Ry
                     //temp = Regs[opcode.X]/Regs[opcode.Y];
-                    temp = Math.DivRem(Regs[opcode.X], Regs[opcode.Y], out rem);
+                    Math.DivRem(Regs[opcode.X], Regs[opcode.Y], out rem);
+                    temp = (short)Regs[opcode.X] / Regs[opcode.Y];
                     Flags.UpdateFlagsDiv(temp, rem);
                     Regs[opcode.X] = (ushort)temp;
                     break;
                 case 0xA2: // Rz = Rx / Ry
                     //temp = Regs[opcode.X] / Regs[opcode.Y];
-                    temp = Math.DivRem(Regs[opcode.X], Regs[opcode.Y], out rem);
+                    Math.DivRem(Regs[opcode.X], Regs[opcode.Y], out rem);
+                    temp = (short)Regs[opcode.X] / Regs[opcode.Y];
                     Flags.UpdateFlagsDiv(temp, rem);
                     Regs[opcode.Z] = (ushort)temp;
                     break;
@@ -714,8 +827,9 @@ namespace nChip16
                     Flags.UpdateFlagsLogic(temp);
                     break;
                 case 0xB2: // Rx = Rx >> N, copying leading bit
-                    temp = Regs[opcode.X] >> opcode.N;
-                    Flags.UpdateFlagsSar(temp, Regs[opcode.X]);
+                    temp = (short)Regs[opcode.X] >> opcode.N;
+                    //Flags.UpdateFlagsSar(temp, Regs[opcode.X]);
+                    Flags.UpdateFlagsLogic(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
                 case 0xb3: // Rx = Rx << Ry
@@ -728,9 +842,10 @@ namespace nChip16
                     Flags.UpdateFlagsLogic(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
-                case 0xb5: // Rx = Rx >> Ry, copying leadig bit
-                    temp = Regs[opcode.X] >> Regs[opcode.Y];
-                    Flags.UpdateFlagsSar(temp, Regs[opcode.X]);
+                case 0xb5: // Rx = Rx >> Ry, copying leading bit
+                    temp = (short)Regs[opcode.X] >> Regs[opcode.Y];
+                    //Flags.UpdateFlagsSar(temp, Regs[opcode.X]);
+                    Flags.UpdateFlagsLogic(temp);
                     Regs[opcode.X] = (ushort)temp;
                     break;
                 case 0xc0: // PUSH Rx 
@@ -820,7 +935,10 @@ namespace nChip16
 
         public void UpdateScreenFromFramebuffer()
         {
+            var sw = new Stopwatch();
+            sw.Start();
             SetPalette(lastPaletteAddress);
+           
             if (Screen == null)
                 return;
 
@@ -834,6 +952,8 @@ namespace nChip16
                     Screen.SetPixel(x,y,color.A,color.R,color.G,color.B);
                 }
             }
+            LastFrameTime = sw.ElapsedMilliseconds;
+            //Debug.WriteLine(msLastFrame); 
         }
 
         private void SetPalette(ushort HHLL)

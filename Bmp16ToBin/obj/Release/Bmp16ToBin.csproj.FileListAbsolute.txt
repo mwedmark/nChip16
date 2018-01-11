@@ -1,0 +1,12 @@
+C:\Projects\nChip16\Bmp16ToBin\bin\Release\Bmp16ToBin.exe.config
+C:\Projects\nChip16\Bmp16ToBin\bin\Release\Bmp16ToBin.exe
+C:\Projects\nChip16\Bmp16ToBin\bin\Release\Bmp16ToBin.pdb
+C:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.csprojResolveAssemblyReference.cache
+C:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.exe
+C:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.pdb
+D:\Projects\nChip16\Bmp16ToBin\bin\Release\Bmp16ToBin.exe.config
+D:\Projects\nChip16\Bmp16ToBin\bin\Release\Bmp16ToBin.exe
+D:\Projects\nChip16\Bmp16ToBin\bin\Release\Bmp16ToBin.pdb
+D:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.csprojResolveAssemblyReference.cache
+D:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.exe
+D:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.pdb

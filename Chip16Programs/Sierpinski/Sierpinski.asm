@@ -3,7 +3,7 @@
 ; Written by Magnus Wedmark, 2013
 
 SpriteSize equ $0101        ; 2 x 1 pixel
-MaxPoints equ 640
+MaxPoints equ 65535 ;640
 ;----------------------------------------------------------------
 ; R0 = Current X
 ; R1 = Current Y

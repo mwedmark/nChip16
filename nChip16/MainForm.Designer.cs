@@ -47,6 +47,10 @@ namespace nChip16
             this.tsslChip16Usage = new System.Windows.Forms.ToolStripStatusLabel();
             this.tssLabelInstructionCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslInstructionCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tssLabelDrawFrameTimer = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tssDrawFrameTimer = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tssLabelFps = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tssFps = new System.Windows.Forms.ToolStripStatusLabel();
             this.cmsWatchesMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addWatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editWatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,6 +66,10 @@ namespace nChip16
             this.autostartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullScreenFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetInstructionCounterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.joystickMappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultMappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chip8MappingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disableGraphicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.slowTimer = new System.Windows.Forms.Timer(this.components);
             this.gbControls = new System.Windows.Forms.GroupBox();
             this.btnStep = new nChip16.KeyHandleButton();
@@ -145,7 +153,11 @@ namespace nChip16
             this.tssLabelChip16Usage,
             this.tsslChip16Usage,
             this.tssLabelInstructionCount,
-            this.tsslInstructionCount});
+            this.tsslInstructionCount,
+            this.tssLabelDrawFrameTimer,
+            this.tssDrawFrameTimer,
+            this.tssLabelFps,
+            this.tssFps});
             this.statusStrip1.Location = new System.Drawing.Point(0, 612);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1188, 22);
@@ -232,6 +244,32 @@ namespace nChip16
             this.tsslInstructionCount.Size = new System.Drawing.Size(22, 17);
             this.tsslInstructionCount.Text = "---";
             // 
+            // tssLabelDrawFrameTimer
+            // 
+            this.tssLabelDrawFrameTimer.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.tssLabelDrawFrameTimer.Name = "tssLabelDrawFrameTimer";
+            this.tssLabelDrawFrameTimer.Size = new System.Drawing.Size(108, 17);
+            this.tssLabelDrawFrameTimer.Text = "DrawFrameTimer:";
+            // 
+            // tssDrawFrameTimer
+            // 
+            this.tssDrawFrameTimer.Name = "tssDrawFrameTimer";
+            this.tssDrawFrameTimer.Size = new System.Drawing.Size(22, 17);
+            this.tssDrawFrameTimer.Text = "---";
+            // 
+            // tssLabelFps
+            // 
+            this.tssLabelFps.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.tssLabelFps.Name = "tssLabelFps";
+            this.tssLabelFps.Size = new System.Drawing.Size(30, 17);
+            this.tssLabelFps.Text = "FPS:";
+            // 
+            // tssFps
+            // 
+            this.tssFps.Name = "tssFps";
+            this.tssFps.Size = new System.Drawing.Size(22, 17);
+            this.tssFps.Text = "---";
+            // 
             // cmsWatchesMenu
             // 
             this.cmsWatchesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -314,7 +352,9 @@ namespace nChip16
             this.tsmiShowSourceListing,
             this.autostartToolStripMenuItem,
             this.fullScreenFilterToolStripMenuItem,
-            this.resetInstructionCounterToolStripMenuItem});
+            this.resetInstructionCounterToolStripMenuItem,
+            this.joystickMappingToolStripMenuItem,
+            this.disableGraphicsToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -362,6 +402,39 @@ namespace nChip16
             this.resetInstructionCounterToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.resetInstructionCounterToolStripMenuItem.Text = "Reset Instruction counter";
             this.resetInstructionCounterToolStripMenuItem.Click += new System.EventHandler(this.resetInstructionCounterToolStripMenuItem_Click);
+            // 
+            // joystickMappingToolStripMenuItem
+            // 
+            this.joystickMappingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defaultMappingToolStripMenuItem,
+            this.chip8MappingToolStripMenuItem});
+            this.joystickMappingToolStripMenuItem.Name = "joystickMappingToolStripMenuItem";
+            this.joystickMappingToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.joystickMappingToolStripMenuItem.Text = "Joystick mapping";
+            // 
+            // defaultMappingToolStripMenuItem
+            // 
+            this.defaultMappingToolStripMenuItem.Name = "defaultMappingToolStripMenuItem";
+            this.defaultMappingToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.defaultMappingToolStripMenuItem.Text = "Default mapping";
+            this.defaultMappingToolStripMenuItem.Click += new System.EventHandler(this.defaultMappingToolStripMenuItem_Click);
+            // 
+            // chip8MappingToolStripMenuItem
+            // 
+            this.chip8MappingToolStripMenuItem.Name = "chip8MappingToolStripMenuItem";
+            this.chip8MappingToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.chip8MappingToolStripMenuItem.Text = "Chip8 mapping";
+            this.chip8MappingToolStripMenuItem.Click += new System.EventHandler(this.chip8MappingToolStripMenuItem_Click);
+            // 
+            // disableGraphicsToolStripMenuItem
+            // 
+            this.disableGraphicsToolStripMenuItem.Checked = true;
+            this.disableGraphicsToolStripMenuItem.CheckOnClick = true;
+            this.disableGraphicsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.disableGraphicsToolStripMenuItem.Name = "disableGraphicsToolStripMenuItem";
+            this.disableGraphicsToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.disableGraphicsToolStripMenuItem.Text = "Disable Graphics";
+            this.disableGraphicsToolStripMenuItem.Click += new System.EventHandler(this.disableGraphicsToolStripMenuItem_Click);
             // 
             // slowTimer
             // 
@@ -901,6 +974,14 @@ namespace nChip16
         private ToolStripStatusLabel tssLabelInstructionCount;
         private ToolStripStatusLabel tsslInstructionCount;
         private ToolStripMenuItem resetInstructionCounterToolStripMenuItem;
+        private ToolStripMenuItem joystickMappingToolStripMenuItem;
+        private ToolStripMenuItem defaultMappingToolStripMenuItem;
+        private ToolStripMenuItem chip8MappingToolStripMenuItem;
+        private ToolStripStatusLabel tssLabelDrawFrameTimer;
+        private ToolStripStatusLabel tssDrawFrameTimer;
+        private ToolStripStatusLabel tssLabelFps;
+        private ToolStripStatusLabel tssFps;
+        private ToolStripMenuItem disableGraphicsToolStripMenuItem;
     }
 }
 

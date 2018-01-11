@@ -1,0 +1,6 @@
+C:\Projects\nChip16\Bmp16ToBin\bin\Debug\Bmp16ToBin.exe.config
+C:\Projects\nChip16\Bmp16ToBin\bin\Debug\Bmp16ToBin.exe
+C:\Projects\nChip16\Bmp16ToBin\bin\Debug\Bmp16ToBin.pdb
+C:\Projects\nChip16\Bmp16ToBin\obj\Debug\Bmp16ToBin.exe
+C:\Projects\nChip16\Bmp16ToBin\obj\Debug\Bmp16ToBin.pdb
+C:\Projects\nChip16\Bmp16ToBin\obj\Debug\Bmp16ToBin.csprojResolveAssemblyReference.cache

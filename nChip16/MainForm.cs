@@ -6,17 +6,23 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace nChip16
 {
+    public enum JoystickMapping { Default, Chip8 };
+
     public partial class MainForm : Form
-    {
+    {        
+        public JoystickMapping JoystickMapping;
+ 
         private Form BackupForm = new Form();
         private bool WasPanel2Collapsed = false;
 
         private MemBitmap memBitmap;
-        private Chip16VM vm = new Chip16VM();
+        private Chip16Vm vm = new Chip16Vm();
         private bool Running = false;
         private ushort KeyboardState = 0;
         private string FileDropped;
@@ -35,7 +41,7 @@ namespace nChip16
         private const int OTag = 21;
 
         private readonly List<RegisterTextBox> Registers = new List<RegisterTextBox>();
-        private List<Watch> Watches = new List<Watch>();
+        private readonly List<Watch> Watches = new List<Watch>();
         private int endOfProgram = 0;
 
         public MainForm(string[] args)
@@ -71,6 +77,9 @@ namespace nChip16
 
             var filterDropDown = PopulateInterpolationDropDown();
             fullScreenFilterToolStripMenuItem.DropDown = filterDropDown;
+
+            defaultMappingToolStripMenuItem.Checked = true;
+            JoystickMapping = JoystickMapping.Default;
         }
 
         private ToolStripDropDown PopulateInterpolationDropDown()
@@ -83,9 +92,11 @@ namespace nChip16
             dropdown.Items.Add(BuildMenuItem(InterpolationMode.HighQualityBicubic/*, Keys.F9*/));
             dropdown.Items.Add(BuildMenuItem(InterpolationMode.HighQualityBilinear/*, Keys.F10*/));
             dropdown.Items.Add(BuildMenuItem(InterpolationMode.Low/*, Keys.F11*/));
+            dropdown.Items.Add(BuildMenuItem(InterpolationMode.NearestNeighbor/*,Keys.F12*/));
+            
 
-            pbEmuScreen.InterpolationMode = InterpolationMode.NearestNeighbor;
-            var nnItem = BuildMenuItem(InterpolationMode.NearestNeighbor/*,Keys.F12*/);
+            pbEmuScreen.InterpolationMode = InterpolationMode.Default;
+            var nnItem = BuildMenuItem(InterpolationMode.Default /*, Keys.F11*/);
             nnItem.Font = new Font(nnItem.Font,FontStyle.Bold);
             dropdown.Items.Add(nnItem);
             dropdown.ItemClicked += dropdown_ItemClicked;
@@ -251,7 +262,7 @@ namespace nChip16
         {
             if (vm != null && vm.CurrentFileStructure != null)
             {
-                var endOfSource = (lastSourceLine+1)*Chip16VM.InstructionSize;
+                var endOfSource = (lastSourceLine+1)*Chip16Vm.InstructionSize;
                 vm.RenderOpcodes(tbSource, endOfSource);
 
                 if(vm.CurrentState != RunningState.Running)
@@ -329,7 +340,8 @@ namespace nChip16
             ushort bitValue = 1;
             int shiftSteps = 0;
 
-            var joyMove = TranslateKeyToChip16Joysticks(keys);
+            var joyMove = JoystickMapping==JoystickMapping.Default?
+                TranslateKeyToChip16JoysticksDefault(keys):TranslateKeyToChip16JoysticksChip8(keys);
 
             switch (joyMove.JoystickNumber)
             {
@@ -380,51 +392,158 @@ namespace nChip16
             return new Tuple<int, ushort>(address, bitValue);
         }
 
-        private static Joystick TranslateKeyToChip16Joysticks(Keys keys)
+        private static Joystick TranslateKeyToChip16JoysticksDefault(Keys keys)
         {
-            var joystick = new Joystick();
-            joystick.JoystickNumber = 0;
-
+             var currentJoy = new Joystick(0);
+           
             switch (keys)
             {
+                // JOY 0
                 case Keys.Up:   //UP
-                    joystick.Change = JoystickMoves.Up;
+                    currentJoy.Change = JoystickMoves.Up;
                     break;
                 case Keys.Down: //DOWN
-                    joystick.Change = JoystickMoves.Down;
+                    currentJoy.Change = JoystickMoves.Down;
                     break;
                 case Keys.Left: //LEFT
-                    joystick.Change = JoystickMoves.Left;
+                    currentJoy.Change = JoystickMoves.Left;
                     break;
                 case Keys.Right: //RIGHT
-                    joystick.Change = JoystickMoves.Right;
+                    currentJoy.Change = JoystickMoves.Right;
                     break;
                 case Keys.A:    //SELECT
-                    joystick.Change = JoystickMoves.Select;
+                    currentJoy.Change = JoystickMoves.Select;
                     break;
                 case Keys.S:    //START
-                    joystick.Change = JoystickMoves.Start;
+                    currentJoy.Change = JoystickMoves.Start;
                     break;
                 case Keys.Z:   //A
-                    joystick.Change = JoystickMoves.A;
+                    currentJoy.Change = JoystickMoves.A;
                     break;
                 case Keys.X:   //B
-                    joystick.Change = JoystickMoves.B;
+                    currentJoy.Change = JoystickMoves.B;
+                    break;
+                // JOY 1
+                case Keys.Y: //UP
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Up;
+                    break;
+                case Keys.H: //DOWN
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Down;
+                    break;
+                case Keys.J: //LEFT
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Left;
+                    break;
+                case Keys.K: //RIGHT
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Right;
+                    break;
+                case Keys.N: //SELECT
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Select;
+                    break;
+                case Keys.M: //START
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Start;
+                    break;
+                case Keys.Oemcomma: //A
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.A;
+                    break;
+                case Keys.OemPeriod: //B
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.B;
                     break;
                 default:
-                    joystick.Change = JoystickMoves.NotMapped;
+                    currentJoy.Change = JoystickMoves.NotMapped;
                     break;
             }
 
-            return joystick;
+            return currentJoy;
+        }
+
+        private static Joystick TranslateKeyToChip16JoysticksChip8(Keys keys)
+        {
+            var currentJoy = new Joystick(0);
+           
+            switch (keys)
+            {
+                // JOY 0
+                case Keys.D1:   //UP
+                    currentJoy.Change = JoystickMoves.Up;
+                    break;
+                case Keys.D2: //DOWN
+                    currentJoy.Change = JoystickMoves.Down;
+                    break;
+                case Keys.D3: //LEFT
+                    currentJoy.Change = JoystickMoves.Left;
+                    break;
+                case Keys.D4: //RIGHT
+                    currentJoy.Change = JoystickMoves.Right;
+                    break;
+                case Keys.Q:    //SELECT
+                    currentJoy.Change = JoystickMoves.Select;
+                    break;
+                case Keys.W:    //START
+                    currentJoy.Change = JoystickMoves.Start;
+                    break;
+                case Keys.E:   //A
+                    currentJoy.Change = JoystickMoves.A;
+                    break;
+                case Keys.R:   //B
+                    currentJoy.Change = JoystickMoves.B;
+                    break;
+                // JOY 1
+                case Keys.A: //UP
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Up;
+                    break;
+                case Keys.S: //DOWN
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Down;
+                    break;
+                case Keys.D: //LEFT
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Left;
+                    break;
+                case Keys.F: //RIGHT
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Right;
+                    break;
+                case Keys.Z: //SELECT
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Select;
+                    break;
+                case Keys.X: //START
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.Start;
+                    break;
+                case Keys.C: //A
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.A;
+                    break;
+                case Keys.V: //B
+                    currentJoy.JoystickNumber = 1;
+                    currentJoy.Change = JoystickMoves.B;
+                    break;
+                default:
+                    currentJoy.Change = JoystickMoves.NotMapped;
+                    break;
+            }
+
+            return currentJoy;
         }
 
         private void emuTimer_Tick(object sender, EventArgs e)
         {
+            //vm.TimerElapsed = true;
+
             emuTimer.Enabled = true;
             ExecuteFrame();
-
-            if(cbRealtimeRegisterUpdate.Checked)
+           
+            if (cbRealtimeRegisterUpdate.Checked)
                 UpdateRegisterFields();
 
             if (cbRealtimeWatches.Checked)
@@ -468,7 +587,8 @@ namespace nChip16
                 return;
 
             // update graphics and sound via buffer pointers
-            UpdateScreen();
+            if(vm.GraphicsEnabled)
+                UpdateScreen();
 
             // check running flag for breakpoint
             if (vm.CurrentState == RunningState.Paused)
@@ -483,11 +603,33 @@ namespace nChip16
             }
         }
 
+        //private void ExecuteTimerRound()
+        //{
+        //    while(true)
+        //    { 
+        //        Chip16Usage = vm.ExecuteTimerRound();
+
+        //        if (Chip16Usage == -1)
+        //            return;
+
+        //        // update graphics and sound via buffer pointers
+        //        //if (false)
+        //        UpdateScreen();
+
+        //        emuTimer.Enabled = true;
+        //    }
+        //}
+
         private void UpdateSlowGraphics()
         {
             tsslChip16Usage.Text =
-                string.Format("[{0}/{1}] {2}%", Chip16Usage, Chip16VM.InstructionsPerFrame,
-                              (int)(Chip16Usage * 100.0 / Chip16VM.InstructionsPerFrame)); 
+                string.Format("[{0}/{1}] {2}%", Chip16Usage, Chip16Vm.InstructionsPerFrame,
+                              (int)(Chip16Usage * 100.0 / Chip16Vm.InstructionsPerFrame));
+            tssDrawFrameTimer.Text = vm.LastFrameTime + " ms";
+            if (vm.InstructionsLastFrame != 0)
+                tssFps.Text = (60 * Chip16Vm.InstructionsPerFrame / vm.InstructionsLastFrame).ToString();
+            else
+                tssFps.Text = "---";
 
             UpdateInstructionCount();
         }
@@ -574,6 +716,7 @@ namespace nChip16
 
                         watch.Address = matchedLabels[0].Address;
                     }
+
                     // redraw lvWatches
                     RedrawWatches();
                 }
@@ -589,7 +732,7 @@ namespace nChip16
                 }
 
                 if (vm.CurrentFileStructure != null)
-                    endOfProgram = (int) (vm.CurrentFileStructure.RomSize/Chip16VM.InstructionSize);
+                    endOfProgram = (int) (vm.CurrentFileStructure.RomSize/Chip16Vm.InstructionSize);
 
                 if (vm.UsingLineLabels)
                 {
@@ -597,7 +740,7 @@ namespace nChip16
                     var endOfProgramLabel = vm.Labels.FindAll(l => l.Name == "EndOfProgram");
 
                     if (endOfProgramLabel.Count == 1)
-                        endOfProgram = endOfProgramLabel[0].Address/Chip16VM.InstructionSize;
+                        endOfProgram = endOfProgramLabel[0].Address/Chip16Vm.InstructionSize;
                 }
 
                 // update starting source code
@@ -610,6 +753,31 @@ namespace nChip16
                     Running = true;
                     vm.CurrentState = RunningState.Running;
                 }
+
+               //TODO: Just added for troubleshooting COAC
+                if (vm.Labels == null || vm.Labels.Count == 0 || 
+                    !vm.Labels.Exists(l => l.Name == "VREGS"))
+                    return;
+
+                var baseRegAddr = vm.Labels.Single(l => l.Name == "VREGS").Address;
+                for (int i = 0; i < 16; i++)
+                {
+                    var currentWatchName = "V" + i.ToString("X1");
+                    if (!Watches.Exists(w => w.Name == currentWatchName))
+                    {
+                        var regWatch = new Watch()
+                        {
+                            Address = (ushort)(baseRegAddr + (i * 2)),
+                            LockTo = LockTo.Address,
+                            Name = currentWatchName,
+                            ShowAs = ShowAs.Hexadecimal,
+                            Type = WatchType.Byte
+                        };
+                        Watches.Add(regWatch);
+                    }
+                    RedrawWatches();
+                }
+
 
             }
             catch (Exception)
@@ -652,6 +820,8 @@ namespace nChip16
             ToggleRunState();
         }
 
+        private Task ExecutingTask;
+
         private void ToggleRunState()
         {
             if (!Running)
@@ -661,8 +831,14 @@ namespace nChip16
                 btnRun.Text = "Stop (F5)";
                 Running = true;
                 emuTimer.Enabled = true;
-                vm.CurrentState = RunningState.Started;
-                
+
+                if (vm.WaitForVBlank)
+                    vm.CurrentState = RunningState.Started;
+
+                //if (ExecutingTask == null)
+                //{
+                //    ExecutingTask = Task.Run(() => Chip16Vm.ExecuteThread(vm));
+                //}
             }
             else
             {
@@ -721,7 +897,7 @@ namespace nChip16
         {
             // first calculate which line is active
             var selectedLine = tbSource.GetLineFromCharIndex(tbSource.SelectionStart);
-            var address = (ushort)(selectedLine*Chip16VM.InstructionSize);
+            var address = (ushort)(selectedLine*Chip16Vm.InstructionSize);
             // Then toggle breakpoint
             var newState = vm.ToggleBreakpoint(address);
             var backColor = tbSource.BackColor;
@@ -795,7 +971,7 @@ namespace nChip16
 
         private void RemovePcHighlight()
         {
-            var currentLine = vm.PC / Chip16VM.InstructionSize;
+            var currentLine = vm.PC / Chip16Vm.InstructionSize;
 
             // do not remove high-light from lines missing
             if (!tbSource.Lines.Any() || (currentLine > tbSource.Lines.Count()))
@@ -1089,6 +1265,7 @@ namespace nChip16
 
         private void tmsiWaitForVBLANK_Click(object sender, EventArgs e)
         {
+            vm.WaitForVBlank = !vm.WaitForVBlank;
         }
 
         private void slowTimer_Tick(object sender, EventArgs e)
@@ -1138,5 +1315,23 @@ namespace nChip16
             ActiveControl = null;
         }
 
+        private void defaultMappingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            JoystickMapping = JoystickMapping.Default;
+            chip8MappingToolStripMenuItem.Checked = false;
+            defaultMappingToolStripMenuItem.Checked = true;
+        }
+
+        private void chip8MappingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            JoystickMapping = JoystickMapping.Chip8;
+            chip8MappingToolStripMenuItem.Checked = true;
+            defaultMappingToolStripMenuItem.Checked = false;
+        }
+
+        private void disableGraphicsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            vm.GraphicsEnabled = !vm.GraphicsEnabled;
+        }
     }
 }

@@ -8,7 +8,8 @@ namespace nChip16
 {
     public class Opcode
     {
-        private string HexPrefix = "$";
+        private const string HexPrefix = "$";
+
         public Opcode()
         {
         }
@@ -46,7 +47,7 @@ namespace nChip16
             }
         }
 
-        private enum GroupMembers { LLHH, YX, OX, YXZ, ON, BB}
+        private enum GroupMembers { LLHH, YX, OX, YXZ, ON, BB, IM}
         public enum BB {Z = 0,NZ,N,NN,P,O,NO,A,AE,B,BE,G,GE,L,LE,RES}
         
         ///Opcodes:
@@ -139,7 +140,11 @@ namespace nChip16
             {0x03,0xB0,0xB1,0xB2};
         private static readonly List<byte> BB_Group = new List<byte>
             {0x12, 0x17};
-
+        // helper group to find immediate instructions
+        private static readonly List<byte> IM_Group = new List<byte> 
+            {0x7,0x8, 0xA, 0xB, 0xC, 0xD, 0x20, 0x21, 0x40, 0x50, 0x53, 0x60, 0x63, 0x70, 0x80, 0x90,
+            0xa0, 0xa3, 0xa6, 0xb0, 0xb1, 0xb2, 0xe0, 0xe3};
+            
         private static bool Is_GroupMember(byte machineCode, GroupMembers group)
         {
             switch (group)
@@ -156,6 +161,8 @@ namespace nChip16
                     return ON_Group.Exists(mc => mc == machineCode);
                 case GroupMembers.BB:
                     return BB_Group.Exists(mc => mc == machineCode);
+                case GroupMembers.IM:
+                    return IM_Group.Exists(mc => mc == machineCode);
                 default: 
                     throw new Exception("Invalid Group of opcode family");
             }
@@ -212,7 +219,8 @@ namespace nChip16
             //sb.AppendFormat("HHLL:{0} [{1}]", HHLL.ToString("X4"), ArrayToString(RawOpcode));
 
             string addressHHLL = HexPrefix + HHLL.ToString("X");
-            if (Is_GroupMember(RawOpcode[0], GroupMembers.LLHH) && !string.IsNullOrEmpty(Label))
+            if (Is_GroupMember(RawOpcode[0], GroupMembers.LLHH) && !string.IsNullOrEmpty(Label) && 
+                !Is_GroupMember(RawOpcode[0], GroupMembers.IM))
                 addressHHLL = Label;
 
             sb.AppendFormat("{0} ", opcodeName);

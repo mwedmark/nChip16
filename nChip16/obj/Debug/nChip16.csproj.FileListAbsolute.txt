@@ -11,3 +11,17 @@ C:\Projects\nChip16\nChip16\bin\Debug\MWHexEdit.dll
 C:\Projects\nChip16\nChip16\bin\Debug\MWHexEdit.pdb
 C:\Projects\nChip16\nChip16\obj\Debug\nChip16.WatchForm.resources
 C:\Projects\nChip16\nChip16\obj\Debug\nChip16.WaitForm.resources
+D:\Projects\nChip16\nChip16\bin\Debug\nChip16.exe.config
+D:\Projects\nChip16\nChip16\obj\Debug\nChip16.exe
+D:\Projects\nChip16\nChip16\obj\Debug\nChip16.pdb
+D:\Projects\nChip16\nChip16\bin\Debug\nChip16.exe
+D:\Projects\nChip16\nChip16\bin\Debug\nChip16.pdb
+D:\Projects\nChip16\nChip16\bin\Debug\MWHexEdit.dll
+D:\Projects\nChip16\nChip16\bin\Debug\MWHexEdit.pdb
+D:\Projects\nChip16\nChip16\obj\Debug\nChip16.csprojResolveAssemblyReference.cache
+D:\Projects\nChip16\nChip16\obj\Debug\nChip16.MainForm.resources
+D:\Projects\nChip16\nChip16\obj\Debug\nChip16.Properties.Resources.resources
+D:\Projects\nChip16\nChip16\obj\Debug\nChip16.WaitForm.resources
+D:\Projects\nChip16\nChip16\obj\Debug\nChip16.WatchForm.resources
+D:\Projects\nChip16\nChip16\obj\Debug\nChip16.csproj.GenerateResource.Cache
+C:\Projects\nChip16\nChip16\bin\Debug\MWHexEdit.dll.config

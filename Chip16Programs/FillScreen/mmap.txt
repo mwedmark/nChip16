@@ -1,0 +1,11 @@
+Label memory mapping:
+---------------------
+
+ 0x0000 : main
+ 0x0010 : init
+ 0x0018 : yloop
+ 0x001c : xloop
+ 0x003c : finished
+ 0x0040 : PixelSprite
+
+---------------------

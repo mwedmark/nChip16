@@ -1,0 +1,61 @@
+(S)Chip-48 Assembler V2.11 by Christian Egeberg 20/8-'91
+
+TargetFile: SuperChipTest
+SourceFile: SuperChipTest.chp
+ListFile: SuperChipTest.lst
+
+Reading: SuperChipTest.chp
+
+Done reading
+
+-----   *INSTRUCTIONS*   -----
+
+  LD  V0, 0 
+SuperChipTest.chp(7).. 200: 6000
+  LD  V1, 0 
+SuperChipTest.chp(8).. 202: 6100
+  LD  I, DATA 
+SuperChipTest.chp(9).. 204: A20A
+  DRW V0,V1,8 
+SuperChipTest.chp(10).. 206: D018
+  JP  STOP 
+SuperChipTest.chp(12).. 208: 1208
+  DB  $..1..... 
+SuperChipTest.chp(15).. 20A: 20
+  DB  $..1..... 
+SuperChipTest.chp(16).. 20B: 20
+  DB  $..1..... 
+SuperChipTest.chp(17).. 20C: 20
+  DB  $..1..... 
+SuperChipTest.chp(18).. 20D: 20
+  DB  $..1..... 
+SuperChipTest.chp(19).. 20E: 20
+  DB  $..1..... 
+SuperChipTest.chp(20).. 20F: 20
+  DB  $..1..... 
+SuperChipTest.chp(21).. 210: 20
+  DB  $..1..... 
+SuperChipTest.chp(22).. 211: 20
+
+-----   *SYMBOLS*   -----
+
+20A DATA SuperChipTest.chp(14)
+  SuperChipTest.chp(9)
+208 STOP SuperChipTest.chp(11)
+  SuperChipTest.chp(12)
+
+-----   *CONDITIONS*   -----
+
+UND ALIGNON
+DEF CHIP48
+DEF CHIP8
+UND HPASC
+UND HPHEAD
+UND SCHIP10
+UND SCHIP11
+UND USEDON
+UND USEDYES
+DEF XREFON
+DEF XREFYES
+
+Total number of warnings: 0

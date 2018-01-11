@@ -1,6 +1,6 @@
 ; Lib for manipulating single flags in the flag register
 ; (C?2:0) + (Z?4:0) + (O?64:0) + (N?128:0))
-; No registers were harmed during these functions.
+; No registers were harmed during these operations.
 ; only R0 used and even that is stack restored. 
 C_bit equ 0x2
 Z_bit equ 0x4
@@ -131,5 +131,11 @@ UnsetAllFlags:
 	call UnsetZ
 	call UnsetO
 	call UnsetN
+	ret
+ToggleAllFlags:
+	call ToggleC
+	call ToggleZ
+	call ToggleO
+	call ToggleN
 	ret
 	
