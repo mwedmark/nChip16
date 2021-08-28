@@ -19,7 +19,6 @@ C:\Projects\UlppEmu\MWHexEdit\obj\Release\GenerateResource.write.1.tlog
 C:\Projects\nChip16\MWHexEdit\bin\Release\MWHexEdit.dll.config
 C:\Projects\nChip16\MWHexEdit\bin\Release\MWHexEdit.dll
 C:\Projects\nChip16\MWHexEdit\bin\Release\MWHexEdit.pdb
-C:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.csprojResolveAssemblyReference.cache
 C:\Projects\nChip16\MWHexEdit\obj\Release\MW.HexEdit.HexEdit.resources
 C:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.csproj.GenerateResource.Cache
 C:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.dll
@@ -32,3 +31,5 @@ D:\Projects\nChip16\MWHexEdit\obj\Release\MW.HexEdit.HexEdit.resources
 D:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.csproj.GenerateResource.Cache
 D:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.dll
 D:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.pdb
+C:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.csprojAssemblyReference.cache
+C:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.csproj.CoreCompileInputs.cache

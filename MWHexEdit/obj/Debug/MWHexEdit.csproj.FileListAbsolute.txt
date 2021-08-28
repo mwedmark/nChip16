@@ -53,4 +53,5 @@ D:\Projects\nChip16\MWHexEdit\obj\Debug\MW.HexEdit.HexEdit.resources
 D:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csproj.GenerateResource.Cache
 D:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.dll
 D:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.pdb
-C:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csprojResolveAssemblyReference.cache
+C:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csprojAssemblyReference.cache
+C:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csproj.CoreCompileInputs.cache

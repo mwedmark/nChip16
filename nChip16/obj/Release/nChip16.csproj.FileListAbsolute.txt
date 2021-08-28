@@ -8,7 +8,6 @@ C:\Projects\nChip16\nChip16\obj\Release\nChip16.exe
 C:\Projects\nChip16\nChip16\obj\Release\nChip16.pdb
 C:\Projects\nChip16\nChip16\bin\Release\MWHexEdit.dll
 C:\Projects\nChip16\nChip16\bin\Release\MWHexEdit.pdb
-C:\Projects\nChip16\nChip16\obj\Release\nChip16.csprojResolveAssemblyReference.cache
 C:\Projects\nChip16\nChip16\obj\Release\nChip16.WatchForm.resources
 C:\Projects\nChip16\nChip16\obj\Release\nChip16.WaitForm.resources
 D:\Projects\nChip16\nChip16\bin\Release\nChip16.exe.config
@@ -25,3 +24,6 @@ D:\Projects\nChip16\nChip16\obj\Release\nChip16.WaitForm.resources
 D:\Projects\nChip16\nChip16\obj\Release\nChip16.WatchForm.resources
 D:\Projects\nChip16\nChip16\obj\Release\nChip16.csproj.GenerateResource.Cache
 C:\Projects\nChip16\nChip16\bin\Release\MWHexEdit.dll.config
+C:\Projects\nChip16\nChip16\obj\Release\nChip16.csprojAssemblyReference.cache
+C:\Projects\nChip16\nChip16\obj\Release\nChip16.csproj.CoreCompileInputs.cache
+C:\Projects\nChip16\nChip16\obj\Release\nChip16.csproj.CopyComplete

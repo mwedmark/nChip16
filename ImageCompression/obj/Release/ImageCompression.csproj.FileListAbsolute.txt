@@ -1,7 +1,6 @@
 C:\Projects\nChip16\ImageCompression\bin\Release\ImageCompression.exe.config
 C:\Projects\nChip16\ImageCompression\bin\Release\ImageCompression.exe
 C:\Projects\nChip16\ImageCompression\bin\Release\ImageCompression.pdb
-C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.csprojResolveAssemblyReference.cache
 C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.exe
 C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.pdb
 D:\Projects\nChip16\ImageCompression\bin\Release\ImageCompression.exe.config
@@ -10,3 +9,5 @@ D:\Projects\nChip16\ImageCompression\bin\Release\ImageCompression.pdb
 D:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.csprojResolveAssemblyReference.cache
 D:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.exe
 D:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.pdb
+C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.csprojAssemblyReference.cache
+C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.csproj.CoreCompileInputs.cache

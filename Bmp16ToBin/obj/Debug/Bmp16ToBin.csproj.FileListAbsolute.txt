@@ -3,4 +3,5 @@ C:\Projects\nChip16\Bmp16ToBin\bin\Debug\Bmp16ToBin.exe
 C:\Projects\nChip16\Bmp16ToBin\bin\Debug\Bmp16ToBin.pdb
 C:\Projects\nChip16\Bmp16ToBin\obj\Debug\Bmp16ToBin.exe
 C:\Projects\nChip16\Bmp16ToBin\obj\Debug\Bmp16ToBin.pdb
-C:\Projects\nChip16\Bmp16ToBin\obj\Debug\Bmp16ToBin.csprojResolveAssemblyReference.cache
+C:\Projects\nChip16\Bmp16ToBin\obj\Debug\Bmp16ToBin.csprojAssemblyReference.cache
+C:\Projects\nChip16\Bmp16ToBin\obj\Debug\Bmp16ToBin.csproj.CoreCompileInputs.cache

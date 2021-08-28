@@ -1,0 +1,7 @@
+C:\Projects\nChip16\Bin2Coe\bin\Debug\Bin2Coe.exe.config
+C:\Projects\nChip16\Bin2Coe\bin\Debug\Bin2Coe.exe
+C:\Projects\nChip16\Bin2Coe\bin\Debug\Bin2Coe.pdb
+C:\Projects\nChip16\Bin2Coe\obj\Debug\Bin2Coe.csprojAssemblyReference.cache
+C:\Projects\nChip16\Bin2Coe\obj\Debug\Bin2Coe.csproj.CoreCompileInputs.cache
+C:\Projects\nChip16\Bin2Coe\obj\Debug\Bin2Coe.exe
+C:\Projects\nChip16\Bin2Coe\obj\Debug\Bin2Coe.pdb

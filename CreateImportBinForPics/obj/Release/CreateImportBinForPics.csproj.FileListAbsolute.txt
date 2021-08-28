@@ -1,7 +1,6 @@
 C:\Projects\nChip16\CreateImportBinForPics\bin\Release\CreateImportBinForPics.exe.config
 C:\Projects\nChip16\CreateImportBinForPics\bin\Release\CreateImportBinForPics.exe
 C:\Projects\nChip16\CreateImportBinForPics\bin\Release\CreateImportBinForPics.pdb
-C:\Projects\nChip16\CreateImportBinForPics\obj\Release\CreateImportBinForPics.csprojResolveAssemblyReference.cache
 C:\Projects\nChip16\CreateImportBinForPics\obj\Release\CreateImportBinForPics.exe
 C:\Projects\nChip16\CreateImportBinForPics\obj\Release\CreateImportBinForPics.pdb
 D:\Projects\nChip16\CreateImportBinForPics\bin\Release\CreateImportBinForPics.exe.config
@@ -10,3 +9,5 @@ D:\Projects\nChip16\CreateImportBinForPics\bin\Release\CreateImportBinForPics.pd
 D:\Projects\nChip16\CreateImportBinForPics\obj\Release\CreateImportBinForPics.csprojResolveAssemblyReference.cache
 D:\Projects\nChip16\CreateImportBinForPics\obj\Release\CreateImportBinForPics.exe
 D:\Projects\nChip16\CreateImportBinForPics\obj\Release\CreateImportBinForPics.pdb
+C:\Projects\nChip16\CreateImportBinForPics\obj\Release\CreateImportBinForPics.csprojAssemblyReference.cache
+C:\Projects\nChip16\CreateImportBinForPics\obj\Release\CreateImportBinForPics.csproj.CoreCompileInputs.cache

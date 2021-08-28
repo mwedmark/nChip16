@@ -1,0 +1,1 @@
+Bmp16ToBin /g %1
