@@ -4,6 +4,6 @@
     <StartArguments>donald_duck.bmp.bin</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>"C:\Users\magnus.wedmark\OneDrive - Calabrio Inc\Pictures\BlitterWasHere.bmp.bin"</StartArguments>
+    <StartArguments>"C:\Projects\nChip16\Chip16Programs\SinglePixel\SinglePixel.c16"</StartArguments>
   </PropertyGroup>
 </Project>

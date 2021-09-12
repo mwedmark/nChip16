@@ -3,5 +3,4 @@ C:\Projects\nChip16\CreateImportBinForPics\bin\Debug\CreateImportBinForPics.exe
 C:\Projects\nChip16\CreateImportBinForPics\bin\Debug\CreateImportBinForPics.pdb
 C:\Projects\nChip16\CreateImportBinForPics\obj\Debug\CreateImportBinForPics.exe
 C:\Projects\nChip16\CreateImportBinForPics\obj\Debug\CreateImportBinForPics.pdb
-C:\Projects\nChip16\CreateImportBinForPics\obj\Debug\CreateImportBinForPics.csprojAssemblyReference.cache
 C:\Projects\nChip16\CreateImportBinForPics\obj\Debug\CreateImportBinForPics.csproj.CoreCompileInputs.cache

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chip16.Shared;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;

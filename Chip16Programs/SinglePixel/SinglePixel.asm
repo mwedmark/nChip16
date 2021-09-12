@@ -22,14 +22,19 @@ MaxPoints equ 65535 ;640
 ;----------------------------------------------------------------
 :main
 ; init program
-	LDI R0, 100
-	LDI R1, 100
+	LDI R0, 50
+	LDI R1, 0
 	SPR SpriteSize
 :loop
 	CLS
+:nextpixel
 	DRW R0,R1,PixelSprite
+	ADDI R0, 1
+	ADDI R1, 1
+	CMPI R1, 240 
+	JNZ nextpixel
 :stop
 	JMP stop
 :PixelSprite
-db 	0xFF,0x00 ; single pixel sprite
+db 	0xF4,0x00 ; single pixel sprite
 
