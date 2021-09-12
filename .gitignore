@@ -13,3 +13,9 @@
 /Bmp16ToBin/bin/Release/Bmp16ToBin.vshost.exe
 /Bmp16ToBin/bin/Release/Bmp16ToBin.vshost.exe.config
 /Bmp16ToBin/bin/Release/Bmp16ToBin.vshost.exe.manifest
+*.xml
+*.iml
+*.exe
+*.pdb
+*.cache
+*.exe

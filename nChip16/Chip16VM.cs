@@ -24,7 +24,7 @@ namespace nChip16
         private readonly Random rnd = new Random((int)DateTime.Now.Ticks);
 
         private List<Color> CurrentPalette = new List<Color>();
-        private ushort lastPaletteAddress = 0;
+        private ushort? lastPaletteAddress = null;
 
         private ushort bgc = 0;
         private FlipMode FlipMode = FlipMode.None;
@@ -273,7 +273,8 @@ namespace nChip16
             UpdateKeyboardState();
 
             // update palette from memory once for each frame
-            SetPalette(lastPaletteAddress);
+            if(lastPaletteAddress != null)
+                SetPalette(lastPaletteAddress.GetValueOrDefault());
 
             while(true)
             {
@@ -937,7 +938,8 @@ namespace nChip16
         {
             var sw = new Stopwatch();
             sw.Start();
-            SetPalette(lastPaletteAddress);
+            if(lastPaletteAddress != null)
+                SetPalette(lastPaletteAddress.GetValueOrDefault());
            
             if (Screen == null)
                 return;
@@ -961,9 +963,9 @@ namespace nChip16
             lastPaletteAddress = HHLL;
             for (int ci = 0; ci < 16; ci++)
             {
-                int R = Memory.ReadByte(lastPaletteAddress + (3 * ci));
-                int G = Memory.ReadByte(lastPaletteAddress + 1 + (3 * ci));
-                int B = Memory.ReadByte(lastPaletteAddress + 2 + (3 * ci));
+                int R = Memory.ReadByte(lastPaletteAddress.GetValueOrDefault() + (3 * ci));
+                int G = Memory.ReadByte(lastPaletteAddress.GetValueOrDefault() + 1 + (3 * ci));
+                int B = Memory.ReadByte(lastPaletteAddress.GetValueOrDefault() + 2 + (3 * ci));
                 CurrentPalette[ci] = Color.FromArgb(R, G, B);
             }
             

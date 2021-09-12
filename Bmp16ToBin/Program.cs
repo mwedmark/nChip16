@@ -200,7 +200,8 @@ namespace Bmp16ToBin
                 for (int x = 0; x < bmpImage.Width; x++)
                 {
                     var currentPixel = bmpImage.GetPixel(x, y);
-                    var currentPaletteIndex = Chip16DefaultPalette.IndexOf(currentPixel);
+                    int currentPaletteIndex = Chip16DefaultPalette.IndexOf(currentPixel);
+                    //currentPixel.A == 255 ? 0 : Chip16DefaultPalette.IndexOf(currentPixel);
                   
                     binData.Add((byte)currentPaletteIndex);
                 }
