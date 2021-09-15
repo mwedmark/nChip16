@@ -41,7 +41,7 @@ int main()
             char flag = tokenList[i][0];
             i++;
             int flagValue = strtol(tokenList[i], NULL, 10);
-            printf("assert: %0s=%0d\r\n", flag, flagValue);
+            printf("assert: %0c=%0d\r\n", flag, flagValue);
             i++;
         }
     }
