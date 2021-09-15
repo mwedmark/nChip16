@@ -35,7 +35,7 @@ int main()
             int regNum = strtol(string, NULL, 16);
             i++;
             int regValue = strtol(tokenList[i], NULL, 10);
-            printf("assert: R%0X=%0d\r\n", regNum, regValue);
+            printf("Reg assert: R%0X=%0d\r\n", regNum, regValue);
         }
         // flag assert
         if (tokenList[i][0] == 'C' || tokenList[i][0] == 'O' || tokenList[i][0] == 'Z' || tokenList[i][0] == 'V')
@@ -43,7 +43,7 @@ int main()
             char flag = tokenList[i][0];
             i++;
             int flagValue = strtol(tokenList[i], NULL, 10);
-            printf("assert: %0c=%0d\r\n", flag, flagValue);
+            printf("Flag assert: %0c=%0d\r\n", flag, flagValue);
             i++;
         }
         //memory assert
@@ -52,7 +52,7 @@ int main()
             int address = strtol(tokenList[i]+1, NULL, 16);
             i++;
             int value = strtol(tokenList[i], NULL, 10);
-            printf("assert: $%0X=%0d\r\n", address, value);
+            printf("Memory assert: $%0X=%0d\r\n", address, value);
         }
     }
 }
