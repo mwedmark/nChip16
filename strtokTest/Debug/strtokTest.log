@@ -1,0 +1,3 @@
+﻿  strtokTest.cpp
+C:\Projects\strtokTest\strtokTest\strtokTest.cpp(44,20): warning C4477: 'printf' : format string '%0s' requires an argument of type 'char *', but variadic argument 1 has type 'int'
+  strtokTest.vcxproj -> C:\Projects\strtokTest\Debug\strtokTest.exe

@@ -8,3 +8,13 @@ C:\Projects\nChip16\Bin2Coe\obj\Debug\Bin2Coe.pdb
 C:\Projects\nChip16\Bin2Coe\bin\Debug\Chip16.Shared.dll
 C:\Projects\nChip16\Bin2Coe\bin\Debug\Chip16.Shared.pdb
 C:\Projects\nChip16\Bin2Coe\obj\Debug\Bin2Coe.csproj.CopyComplete
+C:\git\nChip16\Bin2Coe\bin\Debug\Bin2Coe.exe.config
+C:\git\nChip16\Bin2Coe\bin\Debug\Bin2Coe.exe
+C:\git\nChip16\Bin2Coe\bin\Debug\Bin2Coe.pdb
+C:\git\nChip16\Bin2Coe\bin\Debug\Chip16.Shared.dll
+C:\git\nChip16\Bin2Coe\bin\Debug\Chip16.Shared.pdb
+C:\git\nChip16\Bin2Coe\obj\Debug\Bin2Coe.csproj.AssemblyReference.cache
+C:\git\nChip16\Bin2Coe\obj\Debug\Bin2Coe.csproj.CoreCompileInputs.cache
+C:\git\nChip16\Bin2Coe\obj\Debug\Bin2Coe.csproj.CopyComplete
+C:\git\nChip16\Bin2Coe\obj\Debug\Bin2Coe.exe
+C:\git\nChip16\Bin2Coe\obj\Debug\Bin2Coe.pdb

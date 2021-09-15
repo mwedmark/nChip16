@@ -4,3 +4,9 @@ C:\Projects\nChip16\ImageCompression\bin\Debug\ImageCompression.pdb
 C:\Projects\nChip16\ImageCompression\obj\Debug\ImageCompression.exe
 C:\Projects\nChip16\ImageCompression\obj\Debug\ImageCompression.pdb
 C:\Projects\nChip16\ImageCompression\obj\Debug\ImageCompression.csproj.CoreCompileInputs.cache
+C:\git\nChip16\ImageCompression\bin\Debug\ImageCompression.exe.config
+C:\git\nChip16\ImageCompression\bin\Debug\ImageCompression.exe
+C:\git\nChip16\ImageCompression\bin\Debug\ImageCompression.pdb
+C:\git\nChip16\ImageCompression\obj\Debug\ImageCompression.csproj.CoreCompileInputs.cache
+C:\git\nChip16\ImageCompression\obj\Debug\ImageCompression.exe
+C:\git\nChip16\ImageCompression\obj\Debug\ImageCompression.pdb
