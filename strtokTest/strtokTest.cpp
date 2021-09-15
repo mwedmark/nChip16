@@ -26,7 +26,8 @@ int main()
     // token list created, now lets interpret it!
     for (int i = 0; i < numOfTokens; i++)
     {
-        if (tokenList[i][0] == 'R') // register assert
+        // register assert
+        if (tokenList[i][0] == 'R') 
         {
             char string[2];
             string[0] = tokenList[i][1];
@@ -36,6 +37,7 @@ int main()
             int regValue = strtol(tokenList[i], NULL, 10);
             printf("assert: R%0X=%0d\r\n", regNum, regValue);
         }
+        // flag assert
         if (tokenList[i][0] == 'C' || tokenList[i][0] == 'O' || tokenList[i][0] == 'Z' || tokenList[i][0] == 'V')
         {
             char flag = tokenList[i][0];
@@ -43,6 +45,14 @@ int main()
             int flagValue = strtol(tokenList[i], NULL, 10);
             printf("assert: %0c=%0d\r\n", flag, flagValue);
             i++;
+        }
+        //memory assert
+        if (tokenList[i][0] == '$')
+        {
+            int address = strtol(tokenList[i]+1, NULL, 16);
+            i++;
+            int value = strtol(tokenList[i], NULL, 10);
+            printf("assert: $%0X=%0d\r\n", address, value);
         }
     }
 }
