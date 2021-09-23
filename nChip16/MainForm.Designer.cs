@@ -127,6 +127,7 @@ namespace nChip16
             // 
             // cmsSetLastSource
             // 
+            this.cmsSetLastSource.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.cmsSetLastSource.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmsiSetLastSource});
             this.cmsSetLastSource.Name = "contextMenuStrip1";
@@ -141,6 +142,7 @@ namespace nChip16
             // 
             // statusStrip1
             // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.tsslRomName,
@@ -202,14 +204,14 @@ namespace nChip16
             // tsslInitialPC
             // 
             this.tsslInitialPC.Name = "tsslInitialPC";
-            this.tsslInitialPC.Size = new System.Drawing.Size(42, 17);
+            this.tsslInitialPC.Size = new System.Drawing.Size(43, 17);
             this.tsslInitialPC.Text = "0x0000";
             // 
             // toolStripStatusLabel5
             // 
             this.toolStripStatusLabel5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabel5.Name = "toolStripStatusLabel5";
-            this.toolStripStatusLabel5.Size = new System.Drawing.Size(82, 17);
+            this.toolStripStatusLabel5.Size = new System.Drawing.Size(81, 17);
             this.toolStripStatusLabel5.Text = "Spec Version:";
             // 
             // tsslSpecVersion
@@ -272,6 +274,7 @@ namespace nChip16
             // 
             // cmsWatchesMenu
             // 
+            this.cmsWatchesMenu.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.cmsWatchesMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addWatchToolStripMenuItem,
             this.editWatchToolStripMenuItem,
@@ -302,6 +305,7 @@ namespace nChip16
             // 
             // mainMenu
             // 
+            this.mainMenu.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.settingsToolStripMenuItem});
@@ -639,6 +643,7 @@ namespace nChip16
             this.tbPC.TabStop = false;
             this.tbPC.Text = "FFFF";
             this.tbPC.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPC.TextChanged += new System.EventHandler(this.tbPC_TextChanged);
             // 
             // lblPC
             // 
@@ -812,6 +817,7 @@ namespace nChip16
             this.lvWatches.ContextMenuStrip = this.cmsWatchesMenu;
             this.lvWatches.FullRowSelect = true;
             this.lvWatches.GridLines = true;
+            this.lvWatches.HideSelection = false;
             this.lvWatches.Location = new System.Drawing.Point(3, 33);
             this.lvWatches.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lvWatches.Name = "lvWatches";

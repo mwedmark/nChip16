@@ -1333,5 +1333,10 @@ namespace nChip16
         {
             vm.GraphicsEnabled = !vm.GraphicsEnabled;
         }
+
+        private void tbPC_TextChanged(object sender, EventArgs e)
+        {
+            vm.PC = ushort.Parse(tbPC.Text,NumberStyles.HexNumber);
+        }
     }
 }
