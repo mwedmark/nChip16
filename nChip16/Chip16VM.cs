@@ -821,7 +821,7 @@ namespace nChip16
                 case 0xB0: // Rx = SHL N
                     temp = Regs[opcode.X] << opcode.N;
                     Regs[opcode.X] = (ushort)temp;
-                    Flags.UpdateFlags(temp);
+                    Flags.UpdateFlagsLogic(temp);
                     break;
                 case 0xB1: // Rx = SHR N
                     temp = Regs[opcode.X] >> opcode.N;
