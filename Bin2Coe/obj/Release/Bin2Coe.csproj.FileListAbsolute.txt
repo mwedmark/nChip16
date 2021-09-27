@@ -5,3 +5,6 @@ C:\Projects\nChip16\Bin2Coe\obj\Release\Bin2Coe.csprojAssemblyReference.cache
 C:\Projects\nChip16\Bin2Coe\obj\Release\Bin2Coe.csproj.CoreCompileInputs.cache
 C:\Projects\nChip16\Bin2Coe\obj\Release\Bin2Coe.exe
 C:\Projects\nChip16\Bin2Coe\obj\Release\Bin2Coe.pdb
+C:\Projects\nChip16\Bin2Coe\bin\Release\Chip16.Shared.dll
+C:\Projects\nChip16\Bin2Coe\bin\Release\Chip16.Shared.pdb
+C:\Projects\nChip16\Bin2Coe\obj\Release\Bin2Coe.csproj.CopyComplete
