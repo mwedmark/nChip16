@@ -1,0 +1,8 @@
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\FramebufferMonitor.exe.config
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\FramebufferMonitor.exe
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\FramebufferMonitor.pdb
+C:\Projects\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.MainForm.resources
+C:\Projects\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.csproj.GenerateResource.cache
+C:\Projects\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.csproj.CoreCompileInputs.cache
+C:\Projects\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.exe
+C:\Projects\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.pdb
