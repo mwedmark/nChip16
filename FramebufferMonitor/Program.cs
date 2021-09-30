@@ -12,7 +12,6 @@ namespace FramebufferMonitor
 {
     class Program
     {
-
         const string filename = "testFrameBuffer.dump";
         static MainForm mainForm;
 
@@ -30,61 +29,12 @@ namespace FramebufferMonitor
                 return;
             }
 
-            filePath = Path.Combine(args[0], filename);
-
-            var watcher = new FileSystemWatcher(args[0]);
-            watcher.NotifyFilter = NotifyFilters.LastWrite;
-            watcher.Filter = filename;
-            watcher.Changed += Watcher_Changed;
-            watcher.EnableRaisingEvents = true;
-
+            var filePath = Path.Combine(args[0], filename);
             mainForm = new MainForm();
+            var bitmapWatcher = new BitmapWatcher(mainForm);
+            bitmapWatcher.SetupFileListener(args[0], filename);
+
             mainForm.ShowDialog();
-        }
-
-        static string filePath;
-
-        private static string ReadFileAsString()
-        {
-            while (true)
-            {
-                try
-                {
-                    return File.ReadAllText(filePath);
-                }
-                catch (Exception)
-                {
-                    Thread.Sleep(100);
-                }
-            }
-        }
-
-        private static void Watcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            (sender as FileSystemWatcher).EnableRaisingEvents = false;
-            var fileContentAsString = ReadFileAsString();
-            var stringList = fileContentAsString.Split(new[] { " ", "\r\n" },StringSplitOptions.RemoveEmptyEntries).ToList();
-            //Console.WriteLine($"File changed! First byte is: {(char)fileContent.First()}");
-
-            mainForm.ClearBuffer();
-
-            var intList = new List<int>();
-            //var bitmap = new Bitmap(320, 240);
-            for (int i=0;i< stringList.Count;i++)
-            {
-                var readChar = stringList[i];
-                var readValue = 0;
-                if(readChar != "x")
-                    readValue = int.Parse(readChar.ToString(), NumberStyles.HexNumber);
-
-                intList.Add(readValue);
-                //bitmap.SetPixel(i % 320, i / 320, Color.FromArgb(readValue * 16, readValue * 16, readValue * 16));
-                //mainForm.SetPixel(i%320, i/320, Color.FromArgb(readValue*16, readValue*16, readValue*16));
-            }
-
-            mainForm.SetBitmap(intList);
-
-            (sender as FileSystemWatcher).EnableRaisingEvents = true;
         }
     }
 }

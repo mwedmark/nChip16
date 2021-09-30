@@ -7,3 +7,12 @@ C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.exe
 C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.pdb
 C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.MainForm.resources
 C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.csproj.GenerateResource.cache
+C:\Projects\nChip16\FramebufferMonitor\bin\Debug\nChip16.exe
+C:\Projects\nChip16\FramebufferMonitor\bin\Debug\Chip16.Shared.dll
+C:\Projects\nChip16\FramebufferMonitor\bin\Debug\MWHexEdit.dll
+C:\Projects\nChip16\FramebufferMonitor\bin\Debug\nChip16.pdb
+C:\Projects\nChip16\FramebufferMonitor\bin\Debug\nChip16.exe.config
+C:\Projects\nChip16\FramebufferMonitor\bin\Debug\Chip16.Shared.pdb
+C:\Projects\nChip16\FramebufferMonitor\bin\Debug\MWHexEdit.pdb
+C:\Projects\nChip16\FramebufferMonitor\bin\Debug\MWHexEdit.dll.config
+C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.csproj.CopyComplete

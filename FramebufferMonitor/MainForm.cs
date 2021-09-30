@@ -1,8 +1,10 @@
-﻿using System;
+﻿using nChip16;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +12,7 @@ using System.Windows.Forms;
 
 namespace FramebufferMonitor
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IEmulateWindow
     {
         public MainForm()
         {
@@ -45,21 +47,25 @@ namespace FramebufferMonitor
            
         //}
 
-        internal void ClearBuffer()
+        public void ClearBuffer()
         {
             var g = pictureBox1.CreateGraphics();
             g.Clear(Color.Black);
-
             g.Dispose();
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            //var graphicsSize = e.Graphics.ClipBounds;
+            //e.Graphics.DrawImage()
             int renderWidth = pictureBox1.Width;
             int renderHeight = pictureBox1.Height;
-            //IntPtr hdc = e.Graphics.GetHdc();
+            //int renderWidth = (int)graphicsSize.Width;
+            //int renderHeight = (int)graphicsSize.Height;
+            //e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+            
             IntPtr hdc = e.Graphics.GetHdc();
-
+           
             for (int y = 0; y < renderHeight; y++)
             {
                 for (int x = 0; x < renderWidth; x++)
@@ -74,6 +80,23 @@ namespace FramebufferMonitor
 
             e.Graphics.ReleaseHdc(hdc);
         }
+
+        //private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        //{
+        //    Graphics g = e.Graphics;
+
+        //    // Maximize performance
+        //    g.CompositingMode = CompositingMode.SourceOver;
+        //    g.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+        //    g.CompositingQuality = CompositingQuality.HighSpeed;
+        //    g.InterpolationMode = InterpolationMode.NearestNeighbor;
+        //    g.SmoothingMode = SmoothingMode.None;
+
+        //    var bitmap = new Bitmap(320,240);
+        //    var intPtr = bitmap.GetHbitmap();
+        //    GDI.SetPixel(intPtr, 100, 100, 0x000000);
+        //    g.DrawImage(Image.FromHbitmap(intPtr), Rectangle.FromLTRB(0,0,319,239));
+        //}
 
         private Color GetPixelColor(int x, int y)
         {

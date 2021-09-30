@@ -6,7 +6,6 @@ using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -1337,6 +1336,18 @@ namespace nChip16
         private void tbPC_TextChanged(object sender, EventArgs e)
         {
             vm.PC = ushort.Parse(tbPC.Text,NumberStyles.HexNumber);
+        }
+
+        private void enableFPGALiveGraphicsToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            if(enableFPGALiveGraphicsToolStripMenuItem.Checked)
+            {
+                // enable listening to incoming file changes
+            }
+            else
+            {
+                // disable listening to incoming file changes
+            }
         }
     }
 }

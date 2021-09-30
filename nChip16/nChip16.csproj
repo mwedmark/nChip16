@@ -74,6 +74,7 @@
     <Compile Include="CRC32.cs" />
     <Compile Include="FlagRegister.cs" />
     <Compile Include="FlipMode.cs" />
+    <Compile Include="IEmulateWindow.cs" />
     <Compile Include="Joysticks.cs" />
     <Compile Include="KeyHandleButton.cs">
       <SubType>Component</SubType>
