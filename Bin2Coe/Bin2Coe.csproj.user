@@ -4,6 +4,6 @@
     <StartArguments>donald_duck.bmp.bin</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>"C:\Projects\nChip16\Chip16Programs\SinglePixel\SinglePixel.c16"</StartArguments>
+    <StartArguments>KalleChip16Default.bmp.bin</StartArguments>
   </PropertyGroup>
 </Project>

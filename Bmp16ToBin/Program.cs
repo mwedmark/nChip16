@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Bmp16ToBin
 {
@@ -10,6 +11,7 @@ namespace Bmp16ToBin
     {
         private static bool doGreys = false;
         private static bool doC16DefaultPalette = false;
+        private static bool doC16SimDefaultPalette = false;
         private static readonly List<Color> Chip16DefaultPalette = new List<Color>()
         {
             Color.FromArgb(0x00, 0x00, 0x00, 0x00),
@@ -62,6 +64,11 @@ namespace Bmp16ToBin
                 doC16DefaultPalette = true;
                 fileList.AddRange(pars.Skip(1).ToArray());
             }
+            else if (pars[0] == "/c16sim")
+            {
+                doC16SimDefaultPalette = true;
+                fileList.AddRange(pars.Skip(1).ToArray());
+            }
             else
             {
                 fileList.AddRange((pars));
@@ -81,6 +88,12 @@ namespace Bmp16ToBin
             if(doC16DefaultPalette)
             {
                 MakeChip16BinOriginalPalette(filePath);
+                return;
+            }
+
+            if(doC16SimDefaultPalette)
+            {
+                MakeChip16SimOriginalPalette(filePath);
                 return;
             }
 
@@ -147,6 +160,49 @@ namespace Bmp16ToBin
             }
 
             File.WriteAllBytes(bmpPath + ".bin", binData.ToArray());
+        }
+
+        private static void MakeChip16SimOriginalPalette(string filePath)
+        {
+            var bmpPath = filePath;
+
+            var bmpImage = new Bitmap(bmpPath);
+            var stringData = new List<string>();
+            var palette = new List<Color>();
+
+            // check that all colors in picture is Chip16 Default Palette 
+            for (int y = 0; y < bmpImage.Height; y++)
+            {
+                for (int x = 0; x < bmpImage.Width; x++)
+                {
+                    var currentPixel = bmpImage.GetPixel(x, y);
+                    if (!Chip16DefaultPalette.Contains(currentPixel))
+                        throw new Exception($"Color (R:{currentPixel.R} G:{currentPixel.G} B:{currentPixel.B}) on pixel {x},{y} is not part of default palette");
+                }
+            }
+
+            //Create the correct color index for each pixel
+            for (int y = 0; y < bmpImage.Height; y++)
+            {
+                for (int x = 0; x < bmpImage.Width; x++)
+                {
+                    var currentPixel = bmpImage.GetPixel(x, y);
+                    int currentPaletteIndex = Chip16DefaultPalette.IndexOf(currentPixel);
+                    //currentPixel.A == 255 ? 0 : Chip16DefaultPalette.IndexOf(currentPixel);
+
+                    stringData.Add(currentPaletteIndex.ToString("X0"));
+                }
+            }
+
+            var stringBuilder = new StringBuilder();
+            for(int i=0;i<stringData.Count;i++)
+            {
+                if (i % 64 == 0 && i != 0) stringBuilder.AppendLine();
+                stringBuilder.Append($"{stringData[i]} ");
+            }
+
+            //File.WriteAllBytes(bmpPath + ".test", stringData.ToArray());
+            File.WriteAllText(bmpPath + ".test", stringBuilder.ToString());
         }
 
         private static void MakeGreyBin(string filePath)

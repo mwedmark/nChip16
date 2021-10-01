@@ -4,6 +4,6 @@
     <StartArguments>/d C:\Flags\Europe-SVG\Small</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>/c16d "C:\Users\magnus.wedmark\OneDrive - Calabrio Inc\Pictures\BlitterWasHere.bmp"</StartArguments>
+    <StartArguments>/c16sim KalleChip16Default.bmp</StartArguments>
   </PropertyGroup>
 </Project>

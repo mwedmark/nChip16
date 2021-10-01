@@ -4,6 +4,6 @@
     <StartArguments>C:\Share\Electronics\FPGA\temp\DualScreen\</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <StartArguments>C:\Share\Electronics\FPGA\temp\DualScreen\</StartArguments>
+    <StartArguments>C:\git\Chip16-FPGA</StartArguments>
   </PropertyGroup>
 </Project>
