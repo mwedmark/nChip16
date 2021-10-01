@@ -70,15 +70,29 @@ namespace FramebufferMonitor
             {
                 for (int x = 0; x < renderWidth; x++)
                 {
-                    Color pixelColor = GetPixelColor(x, y);
+                    //Color pixelColor = GetPixelColor(x, y);
 
-                    // NOTE: GDI colors are BGR, not ARGB.
-                    uint colorRef = (uint)((pixelColor.B << 16) | (pixelColor.G << 8) | (pixelColor.R));
+                    //// NOTE: GDI colors are BGR, not ARGB.
+                    //uint colorRef = (uint)((pixelColor.B << 16) | (pixelColor.G << 8) | (pixelColor.R));
+                    //GDI.SetPixel(hdc, x, y, colorRef);
+                    uint colorRef = GetFakeColor(x, y);
                     GDI.SetPixel(hdc, x, y, colorRef);
                 }
             }
 
             e.Graphics.ReleaseHdc(hdc);
+        }
+
+        private uint GetFakeColor(int x, int y)
+        {
+            var offset = 10;
+            if ( (x == offset && y > offset && y < 240-offset) ||
+                 (x == 320-offset && y > offset && y < 240-offset) ||
+                 (y == offset && x > offset && x < 320-offset) ||
+                 (y == 240-offset && x > offset && x < 320-offset))
+                return (uint)0;
+            else
+                return (uint)0xffffff;
         }
 
         //private void pictureBox1_Paint(object sender, PaintEventArgs e)
