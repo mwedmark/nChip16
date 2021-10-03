@@ -11,3 +11,4 @@ C:\git\nChip16\ImageCompression\obj\Debug\ImageCompression.csproj.CoreCompileInp
 C:\git\nChip16\ImageCompression\obj\Debug\ImageCompression.exe
 C:\git\nChip16\ImageCompression\obj\Debug\ImageCompression.pdb
 C:\git\nChip16\ImageCompression\obj\Debug\ImageCompression.csprojAssemblyReference.cache
+C:\Projects\nChip16\ImageCompression\obj\Debug\ImageCompression.csproj.AssemblyReference.cache

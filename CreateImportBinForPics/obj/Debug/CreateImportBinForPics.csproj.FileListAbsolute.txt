@@ -10,3 +10,4 @@ C:\git\nChip16\CreateImportBinForPics\bin\Debug\CreateImportBinForPics.pdb
 C:\git\nChip16\CreateImportBinForPics\obj\Debug\CreateImportBinForPics.csproj.CoreCompileInputs.cache
 C:\git\nChip16\CreateImportBinForPics\obj\Debug\CreateImportBinForPics.exe
 C:\git\nChip16\CreateImportBinForPics\obj\Debug\CreateImportBinForPics.pdb
+C:\Projects\nChip16\CreateImportBinForPics\obj\Debug\CreateImportBinForPics.csproj.AssemblyReference.cache

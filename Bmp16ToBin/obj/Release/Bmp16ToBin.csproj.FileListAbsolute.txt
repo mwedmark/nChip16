@@ -7,7 +7,6 @@ D:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.pdb
 C:\Projects\nChip16\Bmp16ToBin\bin\Release\Bmp16ToBin.exe.config
 C:\Projects\nChip16\Bmp16ToBin\bin\Release\Bmp16ToBin.exe
 C:\Projects\nChip16\Bmp16ToBin\bin\Release\Bmp16ToBin.pdb
-C:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.csprojAssemblyReference.cache
 C:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.csproj.CoreCompileInputs.cache
 C:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.exe
 C:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.pdb
@@ -18,3 +17,4 @@ C:\git\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.csprojAssemblyReference.cache
 C:\git\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.csproj.CoreCompileInputs.cache
 C:\git\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.exe
 C:\git\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.pdb
+C:\Projects\nChip16\Bmp16ToBin\obj\Release\Bmp16ToBin.csproj.AssemblyReference.cache

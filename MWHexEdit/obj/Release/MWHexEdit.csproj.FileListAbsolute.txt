@@ -27,7 +27,6 @@ D:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.pdb
 C:\Projects\nChip16\MWHexEdit\bin\Release\MWHexEdit.dll.config
 C:\Projects\nChip16\MWHexEdit\bin\Release\MWHexEdit.dll
 C:\Projects\nChip16\MWHexEdit\bin\Release\MWHexEdit.pdb
-C:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.csprojAssemblyReference.cache
 C:\Projects\nChip16\MWHexEdit\obj\Release\MW.HexEdit.HexEdit.resources
 C:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.csproj.GenerateResource.cache
 C:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.csproj.CoreCompileInputs.cache
@@ -42,3 +41,4 @@ C:\git\nChip16\MWHexEdit\obj\Release\MWHexEdit.csproj.GenerateResource.cache
 C:\git\nChip16\MWHexEdit\obj\Release\MWHexEdit.csproj.CoreCompileInputs.cache
 C:\git\nChip16\MWHexEdit\obj\Release\MWHexEdit.dll
 C:\git\nChip16\MWHexEdit\obj\Release\MWHexEdit.pdb
+C:\Projects\nChip16\MWHexEdit\obj\Release\MWHexEdit.csproj.AssemblyReference.cache

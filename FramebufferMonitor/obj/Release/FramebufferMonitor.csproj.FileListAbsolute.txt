@@ -24,3 +24,13 @@ C:\git\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.csproj.CoreComp
 C:\git\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.csproj.CopyComplete
 C:\git\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.exe
 C:\git\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.pdb
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\nChip16.exe
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\Chip16.Shared.dll
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\MWHexEdit.dll
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\nChip16.pdb
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\nChip16.exe.config
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\Chip16.Shared.pdb
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\MWHexEdit.pdb
+C:\Projects\nChip16\FramebufferMonitor\bin\Release\MWHexEdit.dll.config
+C:\Projects\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.csproj.AssemblyReference.cache
+C:\Projects\nChip16\FramebufferMonitor\obj\Release\FramebufferMonitor.csproj.CopyComplete

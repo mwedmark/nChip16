@@ -12,6 +12,8 @@ namespace Bmp16ToBin
         private static bool doGreys = false;
         private static bool doC16DefaultPalette = false;
         private static bool doC16SimDefaultPalette = false;
+        private static bool usePackedFormatDefaultPalette = false;
+
         private static readonly List<Color> Chip16DefaultPalette = new List<Color>()
         {
             Color.FromArgb(0x00, 0x00, 0x00, 0x00),
@@ -36,7 +38,9 @@ namespace Bmp16ToBin
             var fileList = ExtractFiles(args);
 
             foreach (var filePath in fileList)
-                MakeBin(filePath);
+            { 
+                MakeBin(filePath, usePackedFormatDefaultPalette);
+            }
         }
 
         private static List<string> ExtractFiles(string[] pars)
@@ -69,6 +73,11 @@ namespace Bmp16ToBin
                 doC16SimDefaultPalette = true;
                 fileList.AddRange(pars.Skip(1).ToArray());
             }
+            else if(pars[0] == "/default")
+            {
+                usePackedFormatDefaultPalette = true;
+                fileList.AddRange((pars.Skip(1).ToArray()));
+            }
             else
             {
                 fileList.AddRange((pars));
@@ -77,7 +86,7 @@ namespace Bmp16ToBin
             return fileList;
         }
 
-        private static void MakeBin(string filePath)
+        private static void MakeBin(string filePath, bool useDefaultPalette = false)
         {
             if(doGreys)
             {
@@ -105,19 +114,26 @@ namespace Bmp16ToBin
 
             // first build palette
             // color of pixel (0,0) will set background color
-            for (int y = 0; y < bmpImage.Height; y++)
+            if (useDefaultPalette)
             {
-                for (int x = 0; x < bmpImage.Width; x++)
-                {
-                    var currentPixel = bmpImage.GetPixel(x, y);
-                    if (!palette.Contains(currentPixel))
-                        palette.Add(currentPixel);
-                }
+                palette.AddRange(Chip16DefaultPalette);
             }
-
-            if (palette.Count > 16)
+            else
             {
-                throw new Exception("A maximum of 16 colors in each BMP-file can be handled.");
+                for (int y = 0; y < bmpImage.Height; y++)
+                {
+                    for (int x = 0; x < bmpImage.Width; x++)
+                    {
+                        var currentPixel = bmpImage.GetPixel(x, y);
+                        if (!palette.Contains(currentPixel))
+                            palette.Add(currentPixel);
+                    }
+                }
+
+                if (palette.Count > 16)
+                {
+                    throw new Exception("A maximum of 16 colors in each BMP-file can be handled.");
+                }
             }
             // Special version for Flags-demo, uses 14 colors per flags and hardcodes
             // 0=Black and 1=White. These are then used for background and text.
@@ -134,7 +150,8 @@ namespace Bmp16ToBin
 
             // try and match closest color to black and move it to index 0
             //palette.Sort((color, color1) => (color.R + color.G + color.B) - (color1.R + color1.G + color1.B));
-            File.WriteAllBytes(bmpPath + ".PAL", ToByteArray(palette));
+            if(!usePackedFormatDefaultPalette)
+                File.WriteAllBytes(bmpPath + ".PAL", ToByteArray(palette));
 
             // will handle images up to 511x255
             var xHighByte = (byte)((bmpImage.Width&0x100)>>8); // only a single bit used
@@ -152,7 +169,13 @@ namespace Bmp16ToBin
                     var currentPixelRight = bmpImage.GetPixel(x + 1, y);
 
                     var leftIndex = palette.FindIndex(c => c == currentPixelLeft);
+                    if (leftIndex == -1)
+                        throw new Exception($"Color in picture not part of default Chip16 palette! {currentPixelLeft}");
+
                     var rightIndex = palette.FindIndex(c => c == currentPixelRight);
+                    if (rightIndex == -1)
+                        throw new Exception($"Color in picture not part of default Chip16 palette! {currentPixelRight}");
+
 
                     var dataByte = (byte) ((leftIndex << 4) + rightIndex);
                     binData.Add(dataByte);

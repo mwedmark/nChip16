@@ -58,24 +58,26 @@ namespace FramebufferMonitor
         {
             //var graphicsSize = e.Graphics.ClipBounds;
             //e.Graphics.DrawImage()
+            //var g = e.Graphics;
             int renderWidth = pictureBox1.Width;
             int renderHeight = pictureBox1.Height;
             //int renderWidth = (int)graphicsSize.Width;
             //int renderHeight = (int)graphicsSize.Height;
             //e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-            
-            IntPtr hdc = e.Graphics.GetHdc();
-           
+
+             IntPtr hdc = e.Graphics.GetHdc();
+
             for (int y = 0; y < renderHeight; y++)
             {
                 for (int x = 0; x < renderWidth; x++)
                 {
-                    //Color pixelColor = GetPixelColor(x, y);
-
+               
+                    Color pixelColor = GetPixelColor(x, y);
+                    //var brush = new SolidBrush(pixelColor);
+                    //g.FillRectangle(brush, x, y, 1, 1);
                     //// NOTE: GDI colors are BGR, not ARGB.
-                    //uint colorRef = (uint)((pixelColor.B << 16) | (pixelColor.G << 8) | (pixelColor.R));
-                    //GDI.SetPixel(hdc, x, y, colorRef);
-                    uint colorRef = GetFakeColor(x, y);
+                    uint colorRef = (uint)((pixelColor.B << 16) | (pixelColor.G << 8) | (pixelColor.R));
+                    //uint colorRef = GetFakeColor(x, y);
                     GDI.SetPixel(hdc, x, y, colorRef);
                 }
             }
@@ -116,7 +118,7 @@ namespace FramebufferMonitor
         {
             if (values == null || values.Count == 0) return Color.Violet;
 
-            var currentIndex = x + y * 240;
+            var currentIndex = x + y * 320;
 
             if (currentIndex >= values.Count)
                 currentIndex = values.Count - 1;

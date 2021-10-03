@@ -47,13 +47,14 @@ Label memory mapping:
  0x03f0 : ToggleN
  0x0410 : SetAllFlags
  0x0424 : UnsetAllFlags
- 0x0438 : EndOfProgram
- 0x0439 : StartOSD
- 0x0489 : EndOSD
- 0x048a : CurrentTest
- 0x048d : FAILED
- 0x049a : AllTestsOk
- 0x04a9 : Palette
- 0x04d9 : MarioFont
+ 0x0438 : ToggleAllFlags
+ 0x044c : EndOfProgram
+ 0x044d : StartOSD
+ 0x049d : EndOSD
+ 0x049e : CurrentTest
+ 0x04a1 : FAILED
+ 0x04ae : AllTestsOk
+ 0x04bd : Palette
+ 0x04ed : MarioFont
 
 ---------------------

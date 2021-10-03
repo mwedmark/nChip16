@@ -1,7 +1,6 @@
 C:\Projects\nChip16\FramebufferMonitor\bin\Debug\FramebufferMonitor.exe.config
 C:\Projects\nChip16\FramebufferMonitor\bin\Debug\FramebufferMonitor.exe
 C:\Projects\nChip16\FramebufferMonitor\bin\Debug\FramebufferMonitor.pdb
-C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.csprojAssemblyReference.cache
 C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.csproj.CoreCompileInputs.cache
 C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.exe
 C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.pdb
@@ -34,3 +33,4 @@ C:\git\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.csproj.CoreCompil
 C:\git\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.csproj.CopyComplete
 C:\git\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.exe
 C:\git\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.pdb
+C:\Projects\nChip16\FramebufferMonitor\obj\Debug\FramebufferMonitor.csproj.AssemblyReference.cache
