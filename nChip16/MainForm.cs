@@ -339,6 +339,18 @@ namespace nChip16
             ushort bitValue = 1;
             int shiftSteps = 0;
 
+            switch (keys)
+            {
+                case Keys.Oemplus:
+                    Ratio += 1;
+                    UpdateScreen();
+                    break;
+                case Keys.OemMinus:
+                    Ratio -= 1;
+                    UpdateScreen();
+                    break;
+            }
+            
             var joyMove = JoystickMapping==JoystickMapping.Default?
                 TranslateKeyToChip16JoysticksDefault(keys):TranslateKeyToChip16JoysticksChip8(keys);
 
@@ -635,7 +647,7 @@ namespace nChip16
 
         private void UpdateScreen()
         {
-            // first give command to vm to redraw from internal Chip16 frambuffer
+            // first give command to vm to redraw from internal Chip16 framebuffer
             vm.UpdateScreenFromFramebuffer();
             pbEmuScreen.Invalidate();
             pbEmuScreen.Refresh();
@@ -647,7 +659,7 @@ namespace nChip16
             UpdateRegisterFields();
 
             if(tsmiShowSourceListing.Checked)
-                UpdateSourceTextBox((uint)endOfProgram); // use romsize as limit for source rendering if 0
+                UpdateSourceTextBox((uint)endOfProgram); // use rom size as limit for source rendering if 0
             
             hexEdit1.RenewVisibleValues();
             UpdateWatchValues();
@@ -820,6 +832,7 @@ namespace nChip16
         }
 
         private Task ExecutingTask;
+        public int Ratio = 1;
 
         private void ToggleRunState()
         {
@@ -1072,10 +1085,15 @@ namespace nChip16
                 // size bitmap to keep same ratio but full-screen
                 var screenSize = Screen.PrimaryScreen.Bounds;
 
-                var ratio = screenSize.Height/240.0;
+                var ratio = Ratio; //screenSize.Height/240.0;
                 var newX = 320.0 * ratio;
                 var newY = 240.0 * ratio;
-                pbEmuScreen.Location = new Point((int)(screenSize.Width-newX)/2, 0);
+                
+                //pbEmuScreen.Location = new Point((int)(screenSize.Width-newX)/2, 0);
+                
+                // center image regardless of size
+                pbEmuScreen.Location =  new Point((int)((screenSize.Width/2)-(newX/2)),(int)((screenSize.Height/2)-(newY/2)));
+                pbEmuScreen.KeyDown += PbEmuScreenOnKeyDown;
                 pbEmuScreen.Size = new Size((int)newX, (int)newY);
 
                 FullScreen = true;
@@ -1101,6 +1119,21 @@ namespace nChip16
                 splitContainer1.Panel2Collapsed = WasPanel2Collapsed;
 
                 FullScreen = false;
+            }
+        }
+
+        private void PbEmuScreenOnKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Oemplus:
+                    Ratio += 1;
+                    Invalidate();
+                    break;
+                case Keys.OemMinus:
+                    Ratio -= 1;
+                    Invalidate();
+                    break;
             }
         }
 
