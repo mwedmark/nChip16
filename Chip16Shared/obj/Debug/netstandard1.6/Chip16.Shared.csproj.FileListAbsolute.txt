@@ -14,6 +14,7 @@ C:\git\nChip16\Chip16Shared\obj\Debug\netstandard1.6\Chip16.Shared.AssemblyInfo.
 C:\git\nChip16\Chip16Shared\obj\Debug\netstandard1.6\Chip16.Shared.csproj.CoreCompileInputs.cache
 C:\git\nChip16\Chip16Shared\obj\Debug\netstandard1.6\Chip16.Shared.dll
 C:\git\nChip16\Chip16Shared\obj\Debug\netstandard1.6\Chip16.Shared.pdb
-C:\git\nChip16\Chip16Shared\obj\Debug\netstandard1.6\Chip16.Shared.csprojAssemblyReference.cache
 C:\Projects\nChip16\Chip16Shared\obj\Debug\netstandard1.6\Chip16.Shared.csproj.AssemblyReference.cache
 C:\Projects\nChip16\Chip16Shared\obj\Debug\netstandard1.6\Chip16.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\git\nChip16\Chip16Shared\obj\Debug\netstandard1.6\Chip16.Shared.csproj.AssemblyReference.cache
+C:\git\nChip16\Chip16Shared\obj\Debug\netstandard1.6\Chip16.Shared.GeneratedMSBuildEditorConfig.editorconfig

@@ -45,5 +45,5 @@ C:\git\nChip16\nChip16\obj\Debug\nChip16.csproj.CoreCompileInputs.cache
 C:\git\nChip16\nChip16\obj\Debug\nChip16.csproj.CopyComplete
 C:\git\nChip16\nChip16\obj\Debug\nChip16.exe
 C:\git\nChip16\nChip16\obj\Debug\nChip16.pdb
-C:\git\nChip16\nChip16\obj\Debug\nChip16.csprojAssemblyReference.cache
 C:\Projects\nChip16\nChip16\obj\Debug\nChip16.csproj.AssemblyReference.cache
+C:\git\nChip16\nChip16\obj\Debug\nChip16.csproj.AssemblyReference.cache

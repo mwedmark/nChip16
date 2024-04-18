@@ -62,5 +62,5 @@ C:\git\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csproj.GenerateResource.cache
 C:\git\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csproj.CoreCompileInputs.cache
 C:\git\nChip16\MWHexEdit\obj\Debug\MWHexEdit.dll
 C:\git\nChip16\MWHexEdit\obj\Debug\MWHexEdit.pdb
-C:\git\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csprojAssemblyReference.cache
 C:\Projects\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csproj.AssemblyReference.cache
+C:\git\nChip16\MWHexEdit\obj\Debug\MWHexEdit.csproj.AssemblyReference.cache

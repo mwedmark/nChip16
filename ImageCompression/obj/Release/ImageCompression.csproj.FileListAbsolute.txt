@@ -11,3 +11,10 @@ C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.csproj.CoreCom
 C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.exe
 C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.pdb
 C:\Projects\nChip16\ImageCompression\obj\Release\ImageCompression.csproj.AssemblyReference.cache
+C:\git\nChip16\ImageCompression\bin\Release\ImageCompression.exe.config
+C:\git\nChip16\ImageCompression\bin\Release\ImageCompression.exe
+C:\git\nChip16\ImageCompression\bin\Release\ImageCompression.pdb
+C:\git\nChip16\ImageCompression\obj\Release\ImageCompression.csproj.AssemblyReference.cache
+C:\git\nChip16\ImageCompression\obj\Release\ImageCompression.csproj.CoreCompileInputs.cache
+C:\git\nChip16\ImageCompression\obj\Release\ImageCompression.exe
+C:\git\nChip16\ImageCompression\obj\Release\ImageCompression.pdb

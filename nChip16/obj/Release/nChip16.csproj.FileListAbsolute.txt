@@ -36,7 +36,6 @@ C:\git\nChip16\nChip16\bin\Release\MWHexEdit.dll
 C:\git\nChip16\nChip16\bin\Release\Chip16.Shared.pdb
 C:\git\nChip16\nChip16\bin\Release\MWHexEdit.pdb
 C:\git\nChip16\nChip16\bin\Release\MWHexEdit.dll.config
-C:\git\nChip16\nChip16\obj\Release\nChip16.csprojAssemblyReference.cache
 C:\git\nChip16\nChip16\obj\Release\nChip16.MainForm.resources
 C:\git\nChip16\nChip16\obj\Release\nChip16.Properties.Resources.resources
 C:\git\nChip16\nChip16\obj\Release\nChip16.WaitForm.resources
@@ -47,3 +46,4 @@ C:\git\nChip16\nChip16\obj\Release\nChip16.csproj.CopyComplete
 C:\git\nChip16\nChip16\obj\Release\nChip16.exe
 C:\git\nChip16\nChip16\obj\Release\nChip16.pdb
 C:\Projects\nChip16\nChip16\obj\Release\nChip16.csproj.AssemblyReference.cache
+C:\git\nChip16\nChip16\obj\Release\nChip16.csproj.AssemblyReference.cache
