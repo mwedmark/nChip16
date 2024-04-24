@@ -1085,7 +1085,7 @@ namespace nChip16
                 // size bitmap to keep same ratio but full-screen
                 var screenSize = Screen.PrimaryScreen.Bounds;
 
-                var ratio = Ratio; //screenSize.Height/240.0;
+                var ratio = screenSize.Height / 240.0; //Ratio; //
                 var newX = 320.0 * ratio;
                 var newY = 240.0 * ratio;
                 
